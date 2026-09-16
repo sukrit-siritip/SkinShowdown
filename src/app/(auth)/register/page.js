@@ -97,7 +97,7 @@ export default function RegisterPage() {
           </Checkbox>
         </Form.Item>
         {state?.error && (
-          <Alert type="error" title={state.error} showIcon className="mb-4" />
+          <Alert type="error" title={state.error} showIcon className="mb-4!" />
         )}
         <Button type="primary" htmlType="submit" block loading={pending}>
           REGISTER

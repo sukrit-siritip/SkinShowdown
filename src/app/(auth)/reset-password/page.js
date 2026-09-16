@@ -48,7 +48,7 @@ export default function ResetPasswordPage() {
           <Input.Password placeholder="Re-enter your new password" autoComplete="new-password" />
         </Form.Item>
         {state?.error && (
-          <Alert type="error" title={state.error} showIcon className="mb-4" />
+          <Alert type="error" title={state.error} showIcon className="mb-4!" />
         )}
         <Button type="primary" htmlType="submit" block loading={pending}>
           UPDATE PASSWORD

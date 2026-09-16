@@ -39,7 +39,7 @@ export default function ForgotPasswordPage() {
             <Input placeholder="hunter@bayou.mail" autoComplete="email" />
           </Form.Item>
           {state?.error && (
-            <Alert type="error" title={state.error} showIcon className="mb-4" />
+            <Alert type="error" title={state.error} showIcon className="mb-4!" />
           )}
           <Button type="primary" htmlType="submit" block loading={pending}>
             SEND RESET LINK
