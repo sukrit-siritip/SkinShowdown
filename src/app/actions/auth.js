@@ -27,6 +27,23 @@ export async function login(prevState, formData) {
   redirect("/");
 }
 
+const DEMO_EMAIL = "demo@skinshowdown.app";
+const DEMO_PASSWORD = "Demo12345!";
+
+export async function loginDemo() {
+  const supabase = await createClient();
+  const { error } = await supabase.auth.signInWithPassword({
+    email: DEMO_EMAIL,
+    password: DEMO_PASSWORD,
+  });
+
+  if (error) {
+    return { error: error.message };
+  }
+
+  redirect("/");
+}
+
 export async function register(prevState, formData) {
   const name = formData.get("name")?.toString().trim();
   const email = formData.get("email")?.toString().trim();
@@ -49,7 +66,7 @@ export async function register(prevState, formData) {
   const supabase = await createClient();
   const origin = await siteOrigin();
 
-  const { error } = await supabase.auth.signUp({
+  const { data, error } = await supabase.auth.signUp({
     email,
     password,
     options: {
@@ -60,6 +77,12 @@ export async function register(prevState, formData) {
 
   if (error) {
     return { error: error.message };
+  }
+
+  // Email confirmation is disabled for this project, so signUp() already
+  // returns an active session — no need to wait for a confirmation email.
+  if (data.session) {
+    redirect("/");
   }
 
   return {

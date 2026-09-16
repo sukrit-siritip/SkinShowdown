@@ -1,20 +1,29 @@
 "use client";
 
-import { useActionState, startTransition } from "react";
+import { useActionState, useState, useTransition, startTransition } from "react";
 import Link from "next/link";
 import { Form, Input, Button, Alert } from "antd";
-import { login } from "@/app/actions/auth";
+import { login, loginDemo } from "@/app/actions/auth";
 import AuthTabs from "../auth-tabs";
 import { fieldLabel } from "../field-label";
 
 export default function LoginPage() {
   const [state, formAction, pending] = useActionState(login, undefined);
+  const [demoPending, startDemoTransition] = useTransition();
+  const [demoError, setDemoError] = useState(null);
 
   const onFinish = (values) => {
     const fd = new FormData();
     fd.append("email", values.email);
     fd.append("password", values.password);
     startTransition(() => formAction(fd));
+  };
+
+  const onTryDemo = () => {
+    startDemoTransition(async () => {
+      const result = await loginDemo();
+      if (result?.error) setDemoError(result.error);
+    });
   };
 
   return (
@@ -44,12 +53,21 @@ export default function LoginPage() {
           </Link>
         </div>
         {state?.error && (
-          <Alert type="error" title={state.error} showIcon className="mb-4" />
+          <Alert type="error" title={state.error} showIcon className="mb-4!" />
         )}
         <Button type="primary" htmlType="submit" block loading={pending}>
           SIGN IN
         </Button>
       </Form>
+      <div className="mt-4">
+        {demoError && <Alert type="error" title={demoError} showIcon className="mb-3!" />}
+        <Button block loading={demoPending} onClick={onTryDemo}>
+          TRY DEMO ACCOUNT
+        </Button>
+        <p className="text-center text-[11px] text-muted mt-2">
+          No sign-up needed — logs in as a preset demo hunter.
+        </p>
+      </div>
     </>
   );
 }
