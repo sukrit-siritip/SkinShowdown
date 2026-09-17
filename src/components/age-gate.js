@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useSyncExternalStore } from "react";
+import { Button } from "antd";
 
 const STORAGE_KEY = "skinshowdown-age-confirmed";
 const listeners = new Set();
@@ -72,14 +73,14 @@ export default function AgeGate() {
           This store depicts cosmetics from a mature, horror-themed shooter. You
           must be 18 or older to enter.
         </p>
-        <button
+        <Button
           ref={confirmRef}
-          type="button"
+          type="text"
           onClick={confirmAge}
-          className="inline-block px-7 py-3 border border-gold bg-[#1a1f2e] text-[13px] font-semibold tracking-[0.14em] transition-all hover:bg-gold hover:text-background"
+          className="h-auto! px-7! py-3! bg-[#1a1f2e]! border! border-gold! text-[13px]! font-semibold! tracking-[0.14em]! text-foreground! transition-all hover:bg-gold! hover:text-background!"
         >
           I AM 18 OR OLDER
-        </button>
+        </Button>
       </div>
     </div>
   );
