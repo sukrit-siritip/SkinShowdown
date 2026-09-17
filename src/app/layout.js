@@ -1,5 +1,6 @@
 import { AntdRegistry } from "@ant-design/nextjs-registry";
 import { Newsreader, Cinzel_Decorative } from "next/font/google";
+import AgeGate from "@/components/age-gate";
 import ThemeProvider from "./theme-provider";
 import "./globals.css";
 
@@ -27,7 +28,10 @@ export default function RootLayout({ children }) {
     >
       <body className="min-h-full flex flex-col">
         <AntdRegistry>
-          <ThemeProvider>{children}</ThemeProvider>
+          <ThemeProvider>
+            <AgeGate />
+            {children}
+          </ThemeProvider>
         </AntdRegistry>
       </body>
     </html>

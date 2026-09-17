@@ -6,14 +6,25 @@
 }
 
 @theme inline {
+  --breakpoint-sm: 768px;
+  --breakpoint-md: 1024px;
+  --breakpoint-lg: 1280px;
+  --breakpoint-xl: 1920px;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: #0f131a;
   --color-gold: #b8860b;
   --color-gold-light: #e0a92a;
   --color-hairline: #2d3543;
+  --color-line: #3d4556;
   --color-muted: #6b7280;
+  --color-tan: #a89968;
+  --color-dim: #5b6470;
   --color-success: #7fa86a;
+  --color-danger: #c41e3a;
+  --color-brass: #8b7355;
+  --color-hover: #171c26;
+  --color-divider: #1e2430;
   --font-sans: var(--font-newsreader);
   --font-logo: var(--font-cinzel-decorative);
 }
@@ -21,7 +32,8 @@
 html,
 body {
   margin: 0;
-  background: linear-gradient(180deg, rgba(30, 52, 84, 0.5), rgba(19, 25, 34, 0.55)),
+  background:
+    linear-gradient(180deg, rgba(30, 52, 84, 0.5), rgba(19, 25, 34, 0.55)),
     url("/Site-background.jpg") center top / cover no-repeat fixed;
   background-color: #131922;
   background-blend-mode: overlay, normal;
@@ -35,5 +47,25 @@ body {
 *,
 *::before,
 *::after {
-  cursor: url("/cursor-32.cur") 0 0, auto !important;
+  cursor:
+    url("/cursor-32.cur") 0 0,
+    auto !important;
+}
+
+.ant-carousel .slick-dots li button {
+  background: #b8860b !important;
+  opacity: 0.75 !important;
+}
+
+.ant-carousel .slick-dots li:hover button {
+  opacity: 1 !important;
+}
+
+.ant-carousel .slick-dots li.slick-active button {
+  background: #2d3543 !important;
+  opacity: 1 !important;
+}
+
+.ant-carousel .slick-dots li.slick-active::after {
+  background: #e0a92a !important;
 }
