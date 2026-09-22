@@ -8,21 +8,30 @@ import StatCard from "@/components/stat-card";
 
 export default async function Home() {
   const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
-  const [{ data: slides }, { count: catalogSize }, { data: newItems }] = await Promise.all([
-    supabase
-      .from("events")
-      .select("id, title, tag, body, cta_label, cta_link, type")
-      .eq("active", true)
-      .order("sort_order", { ascending: true }),
-    supabase.from("items").select("id", { count: "exact", head: true }).eq("published", true),
-    supabase
-      .from("items")
-      .select("*")
-      .eq("published", true)
-      .order("created_at", { ascending: false })
-      .limit(8),
-  ]);
+  const [{ data: slides }, { count: catalogSize }, { data: newItems }, { data: cartRows }] =
+    await Promise.all([
+      supabase
+        .from("events")
+        .select("id, title, tag, body, cta_label, cta_link, type")
+        .eq("active", true)
+        .order("sort_order", { ascending: true }),
+      supabase.from("items").select("id", { count: "exact", head: true }).eq("published", true),
+      supabase
+        .from("items")
+        .select("*")
+        .eq("published", true)
+        .order("created_at", { ascending: false })
+        .limit(8),
+      user
+        ? supabase.from("cart_items").select("item_id").eq("user_id", user.id)
+        : Promise.resolve({ data: [] }),
+    ]);
+
+  const cartItemIds = new Set((cartRows ?? []).map((row) => row.item_id));
 
   const activeEvent = slides?.[0];
   const lastSync = new Date().toLocaleDateString("en-GB", {
@@ -37,7 +46,7 @@ export default async function Home() {
 
       <HeroCarousel slides={slides ?? []} />
 
-      <main className="max-w-[1320px] mx-auto px-6 pt-11 pb-24 w-full">
+      <main className="flex-1 max-w-[1320px] mx-auto px-6 pt-11 pb-24 w-full">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-14">
           {activeEvent && (
             <StatCard
@@ -86,7 +95,7 @@ export default async function Home() {
             style={{ gridTemplateColumns: "repeat(auto-fill, minmax(232px, 1fr))" }}
           >
             {newItems.map((item) => (
-              <ItemCard key={item.id} item={item} />
+              <ItemCard key={item.id} item={item} inCart={cartItemIds.has(item.id)} />
             ))}
           </div>
         ) : (

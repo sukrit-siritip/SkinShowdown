@@ -1,12 +1,33 @@
-import Link from "next/link";
-import { Card, Button } from "antd";
+"use client";
 
-export default function ItemCard({ item }) {
+import { useState, useTransition } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { Card, Button, message } from "antd";
+import { addToCart } from "@/app/actions/items";
+
+export default function ItemCard({ item, inCart = false }) {
   const { id, name, base, slot, price, is_dlc, dlc_name, dlc_steam_url, is_battle_pass } = item;
-  const showPrice = !is_dlc && !is_battle_pass;
+  const showPrice = price != null;
+  const [pending, startTransition] = useTransition();
+  const [addedLocally, setAddedLocally] = useState(false);
+  const router = useRouter();
+  const goToDetail = () => router.push(`/items/${id}`);
+  const stopPropagation = (e) => e.stopPropagation();
+
+  const onAddToCart = () => {
+    startTransition(async () => {
+      const result = await addToCart(id);
+      if (result?.error) message.error(result.error);
+      else if (result?.success) {
+        message.success(`Added ${name} to cart.`);
+        setAddedLocally(true);
+      }
+    });
+  };
 
   const viewButton = (
-    <Link href={`/items/${id}`} className="block w-full">
+    <Link href={`/items/${id}`} className="block w-full" onClick={stopPropagation}>
       <Button size="small" block>
         VIEW
       </Button>
@@ -14,7 +35,7 @@ export default function ItemCard({ item }) {
   );
 
   const secondaryButton = is_battle_pass ? (
-    <Link href="/battle-pass" className="block w-full">
+    <Link href="/battle-pass" className="block w-full" onClick={stopPropagation}>
       <Button type="primary" size="small" block>
         BATTLE PASS
       </Button>
@@ -27,11 +48,25 @@ export default function ItemCard({ item }) {
       href={dlc_steam_url || "#"}
       target="_blank"
       rel="noopener noreferrer"
+      onClick={stopPropagation}
     >
       STEAM
     </Button>
+  ) : inCart || addedLocally ? (
+    <Button size="small" block disabled onClick={stopPropagation}>
+      IN CART
+    </Button>
   ) : (
-    <Button type="primary" size="small" block>
+    <Button
+      type="primary"
+      size="small"
+      block
+      loading={pending}
+      onClick={(e) => {
+        stopPropagation(e);
+        onAddToCart();
+      }}
+    >
       ADD
     </Button>
   );
@@ -40,8 +75,9 @@ export default function ItemCard({ item }) {
     <Card
       variant="borderless"
       classNames={{ body: "p-0!" }}
-      className="group relative overflow-hidden transition-[transform,border-color]! duration-300! hover:border-gold! hover:-translate-y-1!"
+      className="group relative overflow-hidden cursor-pointer transition-[transform,border-color]! duration-300! hover:border-gold! hover:-translate-y-1!"
       style={{ border: "1px solid #2d3543", background: "#0f131a", borderRadius: 0 }}
+      onClick={goToDetail}
     >
       <div
         className="h-[150px] relative flex flex-col justify-between p-2.5"
@@ -64,6 +100,9 @@ export default function ItemCard({ item }) {
             <div className="text-[9px] text-gold tracking-[0.08em] mt-0.5">
               DLC · {dlc_name}
             </div>
+          )}
+          {is_battle_pass && (
+            <div className="text-[9px] text-gold tracking-[0.08em] mt-0.5">BATTLE PASS</div>
           )}
         </div>
         <div className="relative flex items-end justify-between">
