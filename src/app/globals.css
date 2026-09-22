@@ -52,6 +52,10 @@ body {
     auto !important;
 }
 
+.ant-btn > span {
+  transform: translateY(0.14em);
+}
+
 .ant-carousel .slick-list,
 .ant-carousel .slick-track {
   min-height: 316px !important;
