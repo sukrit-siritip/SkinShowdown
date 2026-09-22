@@ -1,8 +1,10 @@
 import { AntdRegistry } from "@ant-design/nextjs-registry";
 import { Newsreader, Cinzel_Decorative } from "next/font/google";
-import AgeGate from "@/components/age-gate";
+import dynamic from "next/dynamic";
 import ThemeProvider from "./theme-provider";
 import "./globals.css";
+
+const AgeGate = dynamic(() => import("@/components/age-gate"));
 
 const newsreader = Newsreader({
   variable: "--font-newsreader",

@@ -34,7 +34,7 @@ body {
   margin: 0;
   background:
     linear-gradient(180deg, rgba(30, 52, 84, 0.5), rgba(19, 25, 34, 0.55)),
-    url("/Site-background.jpg") center top / cover no-repeat fixed;
+    url("/Site-background.webp") center top / cover no-repeat fixed;
   background-color: #131922;
   background-blend-mode: overlay, normal;
 }
@@ -50,6 +50,25 @@ body {
   cursor:
     url("/cursor-32.cur") 0 0,
     auto !important;
+}
+
+.ant-carousel .slick-list,
+.ant-carousel .slick-track {
+  min-height: 316px !important;
+}
+
+@media (min-width: 768px) {
+  .ant-carousel .slick-list,
+  .ant-carousel .slick-track {
+    min-height: 380px !important;
+  }
+}
+
+@media (min-width: 1024px) {
+  .ant-carousel .slick-list,
+  .ant-carousel .slick-track {
+    min-height: 480px !important;
+  }
 }
 
 .ant-carousel .slick-dots li button {
