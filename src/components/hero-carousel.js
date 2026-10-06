@@ -33,7 +33,7 @@ export default function HeroCarousel({ slides }) {
             <div className="max-w-[1320px] mx-auto px-6 pt-16 sm:pt-20 pb-8 sm:pb-10 grid grid-cols-1 md:grid-cols-[minmax(300px,1fr)_minmax(280px,1.05fr)] gap-6 sm:gap-8 md:gap-12 items-center">
               <motion.div
                 className="flex flex-col min-h-[220px] sm:min-h-[260px] md:min-h-[360px] justify-center"
-                initial="hidden"
+                initial={false}
                 animate={current === index ? "show" : "hidden"}
                 variants={content}
               >
