@@ -55,6 +55,7 @@ export async function toggleFavorite(itemId) {
   if (error) return { error: error.message };
 
   revalidatePath(`/items/${itemId}`);
+  revalidatePath("/favorites");
   return { success: true, favorited: !existing };
 }
 

@@ -23,7 +23,10 @@ export default function ItemCard({ item, inCart = false, owned = false, favorite
     stopPropagation(e);
     startFavTransition(async () => {
       const result = await toggleFavorite(id);
-      if (result?.favorited !== undefined) setIsFavorited(result.favorited);
+      if (result?.favorited !== undefined) {
+        setIsFavorited(result.favorited);
+        router.refresh();
+      }
     });
   };
 
