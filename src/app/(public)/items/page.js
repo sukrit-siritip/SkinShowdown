@@ -4,6 +4,7 @@ import ItemsClearLink from "@/components/items-clear-link";
 import ItemsFilters from "@/components/items-filters";
 import ItemsPagination from "@/components/items-pagination";
 import ItemsSort from "@/components/items-sort";
+import { RevealGroup, RevealItem } from "@/components/reveal";
 import { TYPE_GROUPS } from "@/lib/item-type-groups";
 
 const PAGE_SIZE = 12;
@@ -69,19 +70,21 @@ export default async function ItemsPage({ searchParams }) {
 
           {items && items.length > 0 ? (
             <>
-              <div
+              <RevealGroup
+                key={`${type ?? ""}-${weapon ?? ""}-${utility ?? ""}-${q ?? ""}-${sort ?? ""}-${page}`}
                 className="grid gap-4 items-start"
                 style={{ gridTemplateColumns: "repeat(auto-fill, minmax(232px, 1fr))" }}
               >
                 {items.map((item) => (
-                  <ItemCard
-                    key={item.id}
-                    item={item}
-                    inCart={cartItemIds.has(item.id)}
-                    owned={ownedItemIds.has(item.id)}
-                  />
+                  <RevealItem key={item.id}>
+                    <ItemCard
+                      item={item}
+                      inCart={cartItemIds.has(item.id)}
+                      owned={ownedItemIds.has(item.id)}
+                    />
+                  </RevealItem>
                 ))}
-              </div>
+              </RevealGroup>
               <ItemsPagination page={page} pageSize={PAGE_SIZE} total={totalCount ?? 0} />
             </>
           ) : (

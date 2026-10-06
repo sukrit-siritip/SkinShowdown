@@ -5,6 +5,7 @@ import ItemCard from "@/components/item-card";
 import ItemDetailActions from "@/components/item-detail-actions";
 import ItemDetailGallery from "@/components/item-detail-gallery";
 import ItemReviews from "@/components/item-reviews";
+import { RevealGroup, RevealItem } from "@/components/reveal";
 import { TYPE_GROUPS } from "@/lib/item-type-groups";
 
 export default async function ItemDetailPage({ params }) {
@@ -84,10 +85,12 @@ export default async function ItemDetailPage({ params }) {
 
   return (
     <main className="flex-1 max-w-[1320px] mx-auto px-6 pt-9 pb-24 w-full">
-      <div className="grid grid-cols-1 md:grid-cols-[minmax(300px,1.5fr)_minmax(260px,0.62fr)] gap-8 items-start">
-        <ItemDetailGallery />
+      <RevealGroup className="grid grid-cols-1 md:grid-cols-[minmax(300px,1.5fr)_minmax(260px,0.62fr)] gap-8 items-start">
+        <RevealItem>
+          <ItemDetailGallery />
+        </RevealItem>
 
-        <div>
+        <RevealItem>
           <div className="text-[11px] tracking-[0.2em] text-tan mb-2">{meta}</div>
           <h1 className="font-bold text-4xl leading-tight m-0 mb-3">{item.name}</h1>
 
@@ -118,34 +121,39 @@ export default async function ItemDetailPage({ params }) {
             initialInCart={cartItemIds.has(item.id)}
             owned={ownedItemIds.has(item.id)}
           />
-        </div>
-      </div>
+        </RevealItem>
+      </RevealGroup>
 
       {relatedItems && relatedItems.length > 0 && (
         <div className="mt-14">
           <div className="text-[11px] tracking-[0.2em] text-tan mb-3.5">YOU MAY ALSO LIKE</div>
-          <div
+          <RevealGroup
             className="grid gap-4 items-start"
             style={{ gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))" }}
           >
             {relatedItems.map((related) => (
-              <ItemCard
-                key={related.id}
-                item={related}
-                inCart={cartItemIds.has(related.id)}
-                owned={ownedItemIds.has(related.id)}
-              />
+              <RevealItem key={related.id}>
+                <ItemCard
+                  item={related}
+                  inCart={cartItemIds.has(related.id)}
+                  owned={ownedItemIds.has(related.id)}
+                />
+              </RevealItem>
             ))}
-          </div>
+          </RevealGroup>
         </div>
       )}
 
-      <ItemReviews
-        itemId={item.id}
-        reviews={reviews}
-        currentUserId={user?.id ?? null}
-        ownsItem={ownedItemIds.has(item.id)}
-      />
+      <RevealGroup>
+        <RevealItem>
+          <ItemReviews
+            itemId={item.id}
+            reviews={reviews}
+            currentUserId={user?.id ?? null}
+            ownsItem={ownedItemIds.has(item.id)}
+          />
+        </RevealItem>
+      </RevealGroup>
     </main>
   );
 }
