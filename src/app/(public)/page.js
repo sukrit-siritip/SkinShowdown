@@ -1,7 +1,5 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
-import Footer from "@/components/footer";
-import Header from "@/components/header";
 import HeroCarousel from "@/components/hero-carousel";
 import ItemCard from "@/components/item-card";
 import StatCard from "@/components/stat-card";
@@ -42,8 +40,6 @@ export default async function Home() {
 
   return (
     <>
-      <Header />
-
       <HeroCarousel slides={slides ?? []} />
 
       <main className="flex-1 max-w-[1320px] mx-auto px-6 pt-11 pb-24 w-full">
@@ -84,7 +80,7 @@ export default async function Home() {
             <div className="text-[11px] tracking-[0.2em] text-tan mb-1.5">JUST ADDED</div>
             <h2 className="font-bold text-3xl m-0">New Skins &amp; DLC</h2>
           </div>
-          <Link href="/items" className="text-xs text-gold">
+          <Link href="/items" className="text-xs text-gold!">
             VIEW ALL {catalogSize ?? 0} →
           </Link>
         </div>
@@ -104,8 +100,6 @@ export default async function Home() {
           </div>
         )}
       </main>
-
-      <Footer />
     </>
   );
 }
