@@ -4,17 +4,28 @@ import { useState, useTransition } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Card, Button, App } from "antd";
-import { addToCart } from "@/app/actions/items";
+import { HeartFilled, HeartOutlined } from "@ant-design/icons";
+import { addToCart, toggleFavorite } from "@/app/actions/items";
 
-export default function ItemCard({ item, inCart = false, owned = false }) {
+export default function ItemCard({ item, inCart = false, owned = false, favorited }) {
   const { id, name, base, slot, price, is_dlc, dlc_name, dlc_steam_url, is_battle_pass } = item;
   const showPrice = price != null;
   const [pending, startTransition] = useTransition();
   const [addedLocally, setAddedLocally] = useState(false);
+  const [isFavorited, setIsFavorited] = useState(favorited);
+  const [favPending, startFavTransition] = useTransition();
   const router = useRouter();
   const { message } = App.useApp();
   const goToDetail = () => router.push(`/items/${id}`);
   const stopPropagation = (e) => e.stopPropagation();
+
+  const onToggleFavorite = (e) => {
+    stopPropagation(e);
+    startFavTransition(async () => {
+      const result = await toggleFavorite(id);
+      if (result?.favorited !== undefined) setIsFavorited(result.favorited);
+    });
+  };
 
   const onAddToCart = () => {
     startTransition(async () => {
@@ -98,6 +109,18 @@ export default function ItemCard({ item, inCart = false, owned = false }) {
               "linear-gradient(180deg, rgba(10,14,18,0.85), transparent 45%, transparent 60%, rgba(10,14,18,0.85))",
           }}
         />
+        {favorited !== undefined && (
+          <Button
+            type="text"
+            size="small"
+            shape="circle"
+            onClick={onToggleFavorite}
+            loading={favPending}
+            aria-label={isFavorited ? "Remove from favorites" : "Add to favorites"}
+            icon={isFavorited ? <HeartFilled className="text-danger!" /> : <HeartOutlined className="text-foreground!" />}
+            className="absolute! top-1.5! right-1.5! z-10! bg-[#0a0e12]/70!"
+          />
+        )}
         <div className="relative">
           <div className="text-[15px] font-semibold leading-tight">{name}</div>
           <div className="text-[11px] text-tan">{base}</div>
