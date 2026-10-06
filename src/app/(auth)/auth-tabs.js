@@ -3,7 +3,7 @@ import Link from "next/link";
 function tabClass(isActive) {
   return [
     "flex-1 text-center py-2.5 text-xs tracking-[0.08em] border-b-2",
-    isActive ? "border-gold text-foreground" : "border-hairline text-muted",
+    isActive ? "border-gold text-foreground!" : "border-hairline text-muted!",
   ].join(" ");
 }
 

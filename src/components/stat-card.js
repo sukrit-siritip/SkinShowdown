@@ -26,7 +26,7 @@ export default function StatCard({
   );
 
   return href ? (
-    <Link href={href} className="block h-full">
+    <Link href={href} className="block h-full text-foreground!">
       {card}
     </Link>
   ) : (

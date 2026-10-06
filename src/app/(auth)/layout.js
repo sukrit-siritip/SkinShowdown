@@ -7,7 +7,7 @@ export default function AuthLayout({ children }) {
         <div className="flex flex-col items-center mb-6 leading-none">
           <Link
             href="/"
-            className="font-logo font-bold text-[38px] tracking-wide text-foreground"
+            className="font-logo font-bold text-[38px] tracking-wide text-foreground!"
           >
             SKIN
           </Link>

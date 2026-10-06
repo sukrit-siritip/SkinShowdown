@@ -48,7 +48,7 @@ export default function ForgotPasswordPage() {
       )}
 
       <div className="text-center mt-4">
-        <Link href="/login" className="text-[11px] text-muted">
+        <Link href="/login" className="text-[11px] text-muted!">
           ← BACK TO SIGN IN
         </Link>
       </div>
