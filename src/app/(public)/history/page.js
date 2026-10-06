@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
-import HistoryFilters from "@/components/history-filters";
+import HistoryFilters from "@/components/history-filters-loader";
 
 export default async function HistoryPage({ searchParams }) {
   const { from, to } = await searchParams;
