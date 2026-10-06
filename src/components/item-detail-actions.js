@@ -6,7 +6,7 @@ import { Button, Alert } from "antd";
 import { HeartFilled, HeartOutlined } from "@ant-design/icons";
 import { addToCart, toggleFavorite } from "@/app/actions/items";
 
-export default function ItemDetailActions({ item, initialFavorited, initialInCart }) {
+export default function ItemDetailActions({ item, initialFavorited, initialInCart, owned = false }) {
   const boundAddToCart = addToCart.bind(null, item.id);
   const [state, formAction, pending] = useActionState(boundAddToCart, undefined);
   const inCart = initialInCart || state?.success;
@@ -56,6 +56,17 @@ export default function ItemDetailActions({ item, initialFavorited, initialInCar
           rel="noopener noreferrer"
         >
           STEAM
+        </Button>
+        {favoriteButton}
+      </div>
+    );
+  }
+
+  if (owned) {
+    return (
+      <div className="flex gap-2.5 items-stretch">
+        <Button block disabled className="flex-1">
+          ALREADY OWNED
         </Button>
         {favoriteButton}
       </div>

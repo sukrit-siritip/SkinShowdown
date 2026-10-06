@@ -3,15 +3,16 @@
 import { useState, useTransition } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Card, Button, message } from "antd";
+import { Card, Button, App } from "antd";
 import { addToCart } from "@/app/actions/items";
 
-export default function ItemCard({ item, inCart = false }) {
+export default function ItemCard({ item, inCart = false, owned = false }) {
   const { id, name, base, slot, price, is_dlc, dlc_name, dlc_steam_url, is_battle_pass } = item;
   const showPrice = price != null;
   const [pending, startTransition] = useTransition();
   const [addedLocally, setAddedLocally] = useState(false);
   const router = useRouter();
+  const { message } = App.useApp();
   const goToDetail = () => router.push(`/items/${id}`);
   const stopPropagation = (e) => e.stopPropagation();
 
@@ -51,6 +52,10 @@ export default function ItemCard({ item, inCart = false }) {
       onClick={stopPropagation}
     >
       STEAM
+    </Button>
+  ) : owned ? (
+    <Button size="small" block disabled onClick={stopPropagation}>
+      OWNED
     </Button>
   ) : inCart || addedLocally ? (
     <Button size="small" block disabled onClick={stopPropagation}>

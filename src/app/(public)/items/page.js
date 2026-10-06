@@ -1,6 +1,4 @@
 import { createClient } from "@/lib/supabase/server";
-import Footer from "@/components/footer";
-import Header from "@/components/header";
 import ItemCard from "@/components/item-card";
 import ItemsClearLink from "@/components/items-clear-link";
 import ItemsFilters from "@/components/items-filters";
@@ -35,12 +33,16 @@ export default async function ItemsPage({ searchParams }) {
     { data: weaponRows },
     { data: utilityRows },
     { data: cartRows },
+    { data: ownedRows },
   ] = await Promise.all([
     itemsQuery,
     supabase.from("items").select("weapon").eq("published", true).in("type", TYPE_GROUPS.weapon),
     supabase.from("items").select("name").eq("published", true).in("type", TYPE_GROUPS.utility),
     user
       ? supabase.from("cart_items").select("item_id").eq("user_id", user.id)
+      : Promise.resolve({ data: [] }),
+    user
+      ? supabase.from("order_items").select("item_id, orders!inner(user_id)").eq("orders.user_id", user.id)
       : Promise.resolve({ data: [] }),
   ]);
 
@@ -49,47 +51,47 @@ export default async function ItemsPage({ searchParams }) {
     .sort();
   const utilityOptions = [...new Set((utilityRows ?? []).map((row) => row.name))].sort();
   const cartItemIds = new Set((cartRows ?? []).map((row) => row.item_id));
+  const ownedItemIds = new Set((ownedRows ?? []).map((row) => row.item_id));
 
   return (
-    <>
-      <Header />
+    <main className="flex-1 max-w-[1320px] mx-auto px-6 pt-9 pb-24 w-full">
+      <div className="grid grid-cols-1 md:grid-cols-[250px_minmax(0,1fr)] gap-8 items-start">
+        <ItemsFilters weaponOptions={weaponOptions} utilityOptions={utilityOptions} />
 
-      <main className="flex-1 max-w-[1320px] mx-auto px-6 pt-9 pb-24 w-full">
-        <div className="grid grid-cols-1 md:grid-cols-[250px_minmax(0,1fr)] gap-8 items-start">
-          <ItemsFilters weaponOptions={weaponOptions} utilityOptions={utilityOptions} />
-
-          <div>
-            <div className="flex items-baseline justify-between gap-4 flex-wrap mb-5">
-              <div>
-                <div className="text-[11px] tracking-[0.2em] text-tan mb-1.5">CATALOGUE</div>
-                <h1 className="font-bold text-3xl m-0">All Skins</h1>
-              </div>
-              <ItemsSort resultCount={totalCount ?? 0} />
+        <div>
+          <div className="flex items-baseline justify-between gap-4 flex-wrap mb-5">
+            <div>
+              <div className="text-[11px] tracking-[0.2em] text-tan mb-1.5">CATALOGUE</div>
+              <h1 className="font-bold text-3xl m-0">All Skins</h1>
             </div>
-
-            {items && items.length > 0 ? (
-              <>
-                <div
-                  className="grid gap-4 items-start"
-                  style={{ gridTemplateColumns: "repeat(auto-fill, minmax(232px, 1fr))" }}
-                >
-                  {items.map((item) => (
-                    <ItemCard key={item.id} item={item} inCart={cartItemIds.has(item.id)} />
-                  ))}
-                </div>
-                <ItemsPagination page={page} pageSize={PAGE_SIZE} total={totalCount ?? 0} />
-              </>
-            ) : (
-              <div className="border border-hairline bg-card p-12 text-center">
-                <div className="mb-2">No skins match those filters</div>
-                <ItemsClearLink label="CLEAR FILTERS" />
-              </div>
-            )}
+            <ItemsSort resultCount={totalCount ?? 0} />
           </div>
-        </div>
-      </main>
 
-      <Footer />
-    </>
+          {items && items.length > 0 ? (
+            <>
+              <div
+                className="grid gap-4 items-start"
+                style={{ gridTemplateColumns: "repeat(auto-fill, minmax(232px, 1fr))" }}
+              >
+                {items.map((item) => (
+                  <ItemCard
+                    key={item.id}
+                    item={item}
+                    inCart={cartItemIds.has(item.id)}
+                    owned={ownedItemIds.has(item.id)}
+                  />
+                ))}
+              </div>
+              <ItemsPagination page={page} pageSize={PAGE_SIZE} total={totalCount ?? 0} />
+            </>
+          ) : (
+            <div className="border border-hairline bg-card p-12 text-center">
+              <div className="mb-2">No skins match those filters</div>
+              <ItemsClearLink label="CLEAR FILTERS" />
+            </div>
+          )}
+        </div>
+      </div>
+    </main>
   );
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { ConfigProvider, theme } from "antd";
+import { App, ConfigProvider, theme } from "antd";
 
 export default function ThemeProvider({ children }) {
   return (
@@ -9,20 +9,25 @@ export default function ThemeProvider({ children }) {
         algorithm: theme.darkAlgorithm,
         token: {
           colorPrimary: "#b8860b",
+          colorSuccess: "#7fa86a",
+          colorError: "#c41e3a",
           colorBgBase: "#0a0e12",
           colorTextBase: "#e8dcc8",
           colorBorder: "#2d3543",
           fontFamily: "var(--font-newsreader), serif",
           borderRadius: 0,
+          borderRadiusLG: 0,
         },
         components: {
           Input: { colorBgContainer: "#12161d" },
           Button: { colorBgContainer: "#12161d" },
           Form: { itemMarginBottom: 8, verticalLabelPadding: 0 },
+          Alert: { borderRadius: 0 },
+          Message: { contentBg: "#0f131a" },
         },
       }}
     >
-      {children}
+      <App component={false}>{children}</App>
     </ConfigProvider>
   );
 }

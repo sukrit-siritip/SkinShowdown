@@ -13,7 +13,7 @@ export default function HeaderNavLink({ href, label, variant = "desktop", onNavi
         href={href}
         onClick={onNavigate}
         className={`px-1 py-[11px] text-[13px] tracking-[0.08em] border-b border-divider ${
-          active ? "text-foreground" : "text-tan"
+          active ? "text-foreground!" : "text-tan!"
         }`}
       >
         {label}
@@ -24,8 +24,8 @@ export default function HeaderNavLink({ href, label, variant = "desktop", onNavi
   return (
     <Link
       href={href}
-      className={`flex items-center px-0.5 pt-[18px] pb-[15px] -mb-px border-b-2 text-[13px] tracking-[0.14em] transition-colors hover:text-foreground ${
-        active ? "text-foreground border-gold" : "text-muted border-transparent"
+      className={`flex items-center px-0.5 pt-[18px] pb-[15px] -mb-px border-b-2 text-[13px] tracking-[0.14em] transition-colors hover:text-foreground! ${
+        active ? "text-foreground! border-gold" : "text-muted! border-transparent"
       }`}
     >
       {label}

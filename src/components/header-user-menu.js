@@ -45,7 +45,7 @@ export default function HeaderUserMenu({ displayName }) {
               key={item.href}
               href={item.href}
               onClick={() => setOpen(false)}
-              className="block px-3.5 py-[11px] text-xs tracking-[0.06em] text-tan border-b border-divider transition-colors hover:bg-hover hover:text-foreground"
+              className="block px-3.5 py-[11px] text-xs tracking-[0.06em] text-tan! border-b border-divider transition-colors hover:bg-hover hover:text-foreground!"
             >
               {item.label}
             </Link>
