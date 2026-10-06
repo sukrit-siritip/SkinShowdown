@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import HeroCarousel from "@/components/hero-carousel";
 import ItemCard from "@/components/item-card";
 import StatCard from "@/components/stat-card";
+import { RevealGroup, RevealItem } from "@/components/reveal";
 
 export default async function Home() {
   const supabase = await createClient();
@@ -43,37 +44,45 @@ export default async function Home() {
       <HeroCarousel slides={slides ?? []} />
 
       <main className="flex-1 max-w-[1320px] mx-auto px-6 pt-11 pb-24 w-full">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-14">
+        <RevealGroup className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-14">
           {activeEvent && (
-            <StatCard
-              label={`ACTIVE EVENT · ${activeEvent.title}`}
-              value={activeEvent.tag}
-              valueClassName="text-2xl text-danger"
-              description="live now"
-            />
+            <RevealItem>
+              <StatCard
+                label={`ACTIVE EVENT · ${activeEvent.title}`}
+                value={activeEvent.tag}
+                valueClassName="text-2xl text-danger"
+                description="live now"
+              />
+            </RevealItem>
           )}
-          <StatCard
-            label="SKINS LIVE"
-            value={catalogSize ?? 0}
-            valueClassName="text-[32px] text-gold-light"
-            description="published in the store"
-          />
-          <StatCard
-            label="LAST SYNC"
-            value={lastSync}
-            description="data as of this date · prices in USD"
-          />
-          <StatCard
-            href="/battle-pass"
-            label="BATTLE PASS"
-            labelClassName="text-gold"
-            value="Old Testament"
-            valueClassName="text-xl font-semibold mb-1.5"
-            description="See all tier rewards →"
-            descriptionClassName="text-tan"
-            style={{ border: "1px solid #6b5a22", background: "#13110a" }}
-          />
-        </div>
+          <RevealItem>
+            <StatCard
+              label="SKINS LIVE"
+              value={catalogSize ?? 0}
+              valueClassName="text-[32px] text-gold-light"
+              description="published in the store"
+            />
+          </RevealItem>
+          <RevealItem>
+            <StatCard
+              label="LAST SYNC"
+              value={lastSync}
+              description="data as of this date · prices in USD"
+            />
+          </RevealItem>
+          <RevealItem>
+            <StatCard
+              href="/battle-pass"
+              label="BATTLE PASS"
+              labelClassName="text-gold"
+              value="Old Testament"
+              valueClassName="text-xl font-semibold mb-1.5"
+              description="See all tier rewards →"
+              descriptionClassName="text-tan"
+              style={{ border: "1px solid #6b5a22", background: "#13110a" }}
+            />
+          </RevealItem>
+        </RevealGroup>
 
         <div className="flex items-baseline justify-between gap-4 flex-wrap mb-5">
           <div>
@@ -86,14 +95,16 @@ export default async function Home() {
         </div>
 
         {newItems && newItems.length > 0 ? (
-          <div
+          <RevealGroup
             className="grid gap-4 items-start"
             style={{ gridTemplateColumns: "repeat(auto-fill, minmax(232px, 1fr))" }}
           >
             {newItems.map((item) => (
-              <ItemCard key={item.id} item={item} inCart={cartItemIds.has(item.id)} />
+              <RevealItem key={item.id}>
+                <ItemCard item={item} inCart={cartItemIds.has(item.id)} />
+              </RevealItem>
             ))}
-          </div>
+          </RevealGroup>
         ) : (
           <div className="border border-hairline bg-card p-12 text-center text-muted">
             No skins published yet — check back soon.

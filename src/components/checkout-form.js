@@ -15,6 +15,20 @@ function fieldLabel(text) {
   );
 }
 
+function formatCardNumber(value) {
+  const digits = (value ?? "").replace(/\D/g, "").slice(0, 19);
+  return digits.replace(/(\d{4})(?=\d)/g, "$1 ");
+}
+
+function formatExpiry(value) {
+  const digits = (value ?? "").replace(/\D/g, "").slice(0, 4);
+  return digits.length <= 2 ? digits : `${digits.slice(0, 2)} / ${digits.slice(2)}`;
+}
+
+function formatCvc(value) {
+  return (value ?? "").replace(/\D/g, "").slice(0, 4);
+}
+
 export default function CheckoutForm({ email, cartItems, initialPromo = "" }) {
   const [form] = Form.useForm();
   const [state, formAction, pending] = useActionState(checkout, undefined);
@@ -93,22 +107,51 @@ export default function CheckoutForm({ email, cartItems, initialPromo = "" }) {
               name="card_number"
               label={fieldLabel("CARD NUMBER")}
               className="col-span-2 mb-3!"
+              getValueFromEvent={(e) => formatCardNumber(e.target.value)}
+              validateTrigger="onBlur"
+              rules={[
+                { required: true, message: "Card number is required." },
+                {
+                  validator: (_, value) => {
+                    const digits = (value ?? "").replace(/\D/g, "").length;
+                    if (digits < 13 || digits > 19) {
+                      return Promise.reject(new Error("Enter a valid card number."));
+                    }
+                    return Promise.resolve();
+                  },
+                },
+              ]}
             >
-              <Input placeholder="4242 4242 4242 4242" />
+              <Input placeholder="4242 4242 4242 4242" maxLength={23} inputMode="numeric" />
             </Form.Item>
             <Form.Item
               name="card_expiry"
               label={fieldLabel("EXPIRY")}
               className="mb-0!"
+              getValueFromEvent={(e) => formatExpiry(e.target.value)}
+              validateTrigger="onBlur"
+              rules={[
+                { required: true, message: "Expiry is required." },
+                {
+                  pattern: /^(0[1-9]|1[0-2])\s?\/\s?\d{2}$/,
+                  message: "Use MM / YY.",
+                },
+              ]}
             >
-              <Input placeholder="09 / 28" />
+              <Input placeholder="09 / 28" maxLength={7} inputMode="numeric" />
             </Form.Item>
             <Form.Item
               name="card_cvc"
               label={fieldLabel("CVC")}
               className="mb-0!"
+              getValueFromEvent={(e) => formatCvc(e.target.value)}
+              validateTrigger="onBlur"
+              rules={[
+                { required: true, message: "CVC is required." },
+                { pattern: /^\d{3,4}$/, message: "3 or 4 digits." },
+              ]}
             >
-              <Input placeholder="•••" />
+              <Input placeholder="•••" maxLength={4} inputMode="numeric" />
             </Form.Item>
           </div>
         )}
@@ -123,7 +166,14 @@ export default function CheckoutForm({ email, cartItems, initialPromo = "" }) {
               </Radio.Group>
             </Form.Item>
             {paypalEmailChoice === "other" && (
-              <Form.Item name="paypal_email" className="mt-2.5! mb-0!">
+              <Form.Item
+                name="paypal_email"
+                className="mt-2.5! mb-0!"
+                rules={[
+                  { required: true, message: "PayPal email is required." },
+                  { type: "email", message: "Enter a valid email." },
+                ]}
+              >
                 <Input placeholder="you@example.com" />
               </Form.Item>
             )}

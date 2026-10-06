@@ -2,6 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import ItemCard from "@/components/item-card";
+import { RevealGroup, RevealItem } from "@/components/reveal";
 
 export default async function FavoritesPage() {
   const supabase = await createClient();
@@ -37,20 +38,21 @@ export default async function FavoritesPage() {
           </Link>
         </div>
       ) : (
-        <div
+        <RevealGroup
           className="grid gap-4"
           style={{ gridTemplateColumns: "repeat(auto-fill, minmax(236px, 1fr))" }}
         >
           {favoriteItems.map((item) => (
-            <ItemCard
-              key={item.id}
-              item={item}
-              inCart={cartItemIds.has(item.id)}
-              owned={ownedItemIds.has(item.id)}
-              favorited
-            />
+            <RevealItem key={item.id}>
+              <ItemCard
+                item={item}
+                inCart={cartItemIds.has(item.id)}
+                owned={ownedItemIds.has(item.id)}
+                favorited
+              />
+            </RevealItem>
           ))}
-        </div>
+        </RevealGroup>
       )}
     </main>
   );
