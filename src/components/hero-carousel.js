@@ -6,11 +6,13 @@ import Link from "next/link";
 import { motion } from "motion/react";
 
 const content = {
+  intro: {},
   hidden: {},
   show: { transition: { staggerChildren: 0.05 } },
 };
 
 const contentItem = {
+  intro: { y: 16 },
   hidden: { opacity: 0, y: 16 },
   show: { opacity: 1, y: 0, transition: { duration: 0.3, ease: "easeOut" } },
 };
@@ -33,7 +35,7 @@ export default function HeroCarousel({ slides }) {
             <div className="max-w-[1320px] mx-auto px-6 pt-16 sm:pt-20 pb-8 sm:pb-10 grid grid-cols-1 md:grid-cols-[minmax(300px,1fr)_minmax(280px,1.05fr)] gap-6 sm:gap-8 md:gap-12 items-center">
               <motion.div
                 className="flex flex-col min-h-[220px] sm:min-h-[260px] md:min-h-[360px] justify-center"
-                initial={false}
+                initial={index === 0 ? "intro" : false}
                 animate={current === index ? "show" : "hidden"}
                 variants={content}
               >
@@ -70,7 +72,9 @@ export default function HeroCarousel({ slides }) {
                 )}
               </motion.div>
               <div className="relative flex items-center justify-center aspect-video border border-hairline bg-card overflow-hidden">
-                <span className="text-[11px] text-dim">{slide.type?.toUpperCase()}</span>
+                <span className="text-[11px] text-dim">
+                  {slide.type?.toUpperCase()}
+                </span>
               </div>
             </div>
           </div>
