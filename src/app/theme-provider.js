@@ -24,6 +24,19 @@ export default function ThemeProvider({ children }) {
           Form: { itemMarginBottom: 8, verticalLabelPadding: 0 },
           Alert: { borderRadius: 0 },
           Message: { contentBg: "#0f131a" },
+          Table: {
+            colorBgContainer: "transparent",
+            headerBg: "#0f131a",
+            headerColor: "#6b7280",
+            headerSplitColor: "transparent",
+            headerSortActiveBg: "#12171f",
+            headerSortHoverBg: "#12171f",
+            bodySortBg: "transparent",
+            rowHoverBg: "#12171f",
+            borderColor: "#1e2430",
+            cellPaddingBlockSM: 11,
+            cellPaddingInlineSM: 10,
+          },
         },
       }}
     >

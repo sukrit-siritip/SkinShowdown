@@ -82,6 +82,7 @@ body {
   }
 
   &::-webkit-scrollbar {
+    width: 6px;
     height: 6px;
   }
   &::-webkit-scrollbar-track {
@@ -93,6 +94,10 @@ body {
   &:hover::-webkit-scrollbar-thumb {
     background: --theme(--color-gold);
   }
+}
+
+.ant-table-body {
+  @apply scrollbar-thin;
 }
 
 .ant-btn > span {
