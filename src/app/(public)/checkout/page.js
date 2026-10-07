@@ -15,13 +15,13 @@ export default async function CheckoutPage() {
 
   const { data: cartRows } = await supabase
     .from("cart_items")
-    .select("items(*)")
+    .select("items(*, in_stock)")
     .eq("user_id", user.id)
     .order("added_at", { ascending: true });
 
   const cartItems = (cartRows ?? []).map((row) => row.items).filter(Boolean);
 
-  if (cartItems.length === 0) redirect("/cart");
+  if (cartItems.length === 0 || cartItems.some((item) => item.in_stock === false)) redirect("/cart");
 
   return (
     <main className="flex-1 max-w-[1100px] mx-auto px-6 pt-9 pb-24 w-full">

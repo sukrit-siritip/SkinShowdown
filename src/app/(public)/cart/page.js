@@ -16,12 +16,13 @@ export default async function CartPage() {
 
   const { data: cartRows } = await supabase
     .from("cart_items")
-    .select("item_id, items(*)")
+    .select("item_id, items(*, in_stock)")
     .eq("user_id", user.id)
     .order("added_at", { ascending: true });
 
   const cartItems = (cartRows ?? []).map((row) => row.items).filter(Boolean);
   const cartItemIds = new Set(cartItems.map((item) => item.id));
+  const hasSoldOut = cartItems.some((item) => item.in_stock === false);
 
   const subtotal = cartItems.reduce((sum, item) => sum + Number(item.price), 0);
   const tax = subtotal * 0.08;
@@ -32,7 +33,7 @@ export default async function CartPage() {
     const [{ data: upsellRows }, { data: ownedRows }] = await Promise.all([
       supabase
         .from("items")
-        .select("*")
+        .select("*, in_stock")
         .eq("published", true)
         .eq("is_battle_pass", false)
         .order("created_at", { ascending: false })
@@ -41,7 +42,9 @@ export default async function CartPage() {
     ]);
     const ownedItemIds = new Set((ownedRows ?? []).map((row) => row.item_id));
     upsellItems = (upsellRows ?? [])
-      .filter((item) => !cartItemIds.has(item.id) && !ownedItemIds.has(item.id))
+      .filter(
+        (item) => item.in_stock && !cartItemIds.has(item.id) && !ownedItemIds.has(item.id)
+      )
       .slice(0, 4);
   }
 
@@ -95,12 +98,23 @@ export default async function CartPage() {
                 <span className="text-lg">Total</span>
                 <span className="text-[26px] text-gold-light">${total.toFixed(2)}</span>
               </div>
-              <Link
-                href="/checkout"
-                className="block text-center py-3 border border-gold bg-[#1a1f2e] text-foreground! text-[13px] font-semibold tracking-[0.14em] transition-all duration-300 hover:bg-gold! hover:text-background!"
-              >
-                CHECKOUT
-              </Link>
+              {hasSoldOut ? (
+                <>
+                  <div className="text-center py-3 border border-hairline text-muted text-[13px] font-semibold tracking-[0.14em] cursor-not-allowed">
+                    CHECKOUT
+                  </div>
+                  <div className="text-[11px] text-danger text-center mt-2.5">
+                    Remove sold-out skins to check out.
+                  </div>
+                </>
+              ) : (
+                <Link
+                  href="/checkout"
+                  className="block text-center py-3 border border-gold bg-[#1a1f2e] text-foreground! text-[13px] font-semibold tracking-[0.14em] transition-all duration-300 hover:bg-gold! hover:text-background!"
+                >
+                  CHECKOUT
+                </Link>
+              )}
               <div className="text-[10px] text-muted text-center mt-3">
                 ITEM CODES DELIVERED INSTANTLY
               </div>

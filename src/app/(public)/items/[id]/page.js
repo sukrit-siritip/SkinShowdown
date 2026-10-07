@@ -13,7 +13,7 @@ const getPublishedItem = cache(async (id) => {
   const supabase = await createClient();
   const { data } = await supabase
     .from("items")
-    .select("*")
+    .select("*, in_stock")
     .eq("id", id)
     .eq("published", true)
     .maybeSingle();
@@ -51,7 +51,7 @@ export default async function ItemDetailPage({ params }) {
   ] = await Promise.all([
     supabase
       .from("items")
-      .select("*")
+      .select("*, in_stock")
       .in("type", relatedTypes)
       .eq("published", true)
       .neq("id", item.id)

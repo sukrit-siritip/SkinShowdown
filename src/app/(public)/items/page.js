@@ -19,7 +19,7 @@ export default async function ItemsPage({ searchParams }) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  let itemsQuery = supabase.from("items").select("*", { count: "exact" }).eq("published", true);
+  let itemsQuery = supabase.from("items").select("*, in_stock", { count: "exact" }).eq("published", true);
 
   const groupTypes = TYPE_GROUPS[type];
   if (groupTypes) itemsQuery = itemsQuery.in("type", groupTypes);

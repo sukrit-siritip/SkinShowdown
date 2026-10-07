@@ -40,6 +40,11 @@ export default function CartLine({ item }) {
       <div className="flex-1 min-w-0">
         <div className="text-[17px]">{item.name}</div>
         <div className="text-[11px] text-dim">{meta}</div>
+        {item.in_stock === false && (
+          <span className="inline-block mt-1 text-[10px] px-2 py-0.5 border border-danger-dim text-danger">
+            SOLD OUT
+          </span>
+        )}
       </div>
       <div className="text-[15px] w-20 text-right">${Number(item.price).toFixed(2)}</div>
       <Button

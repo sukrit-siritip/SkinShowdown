@@ -17,7 +17,7 @@ export default async function FavoritesPage() {
   const [{ data: favoriteRows }, { data: cartRows }, { data: ownedRows }] = await Promise.all([
     supabase
       .from("favorites")
-      .select("item_id, items(*)")
+      .select("item_id, items(*, in_stock)")
       .eq("user_id", user.id),
     supabase.from("cart_items").select("item_id").eq("user_id", user.id),
     supabase.from("order_items").select("item_id, orders!inner(user_id)").eq("orders.user_id", user.id),

@@ -27,6 +27,7 @@ export async function addToCart(itemId) {
         .eq("item_id", itemId)
     : await supabase.from("cart_items").insert({ user_id: user.id, item_id: itemId, qty: 1 });
 
+  if (error?.message === "SOLD_OUT") return { error: "This skin is sold out." };
   if (error) return { error: error.message };
 
   revalidatePath(`/items/${itemId}`);

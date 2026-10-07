@@ -84,6 +84,17 @@ export default function ItemDetailActions({ item, initialFavorited, initialInCar
     );
   }
 
+  if (item.in_stock === false) {
+    return (
+      <div className="flex gap-2.5 items-stretch">
+        <Button block disabled className="flex-1">
+          SOLD OUT
+        </Button>
+        {favoriteButton}
+      </div>
+    );
+  }
+
   return (
     <div>
       <form action={formAction} className="flex gap-2.5 items-stretch">

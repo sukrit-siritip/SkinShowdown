@@ -31,7 +31,7 @@ export default async function Home() {
       .eq("published", true),
     supabase
       .from("items")
-      .select("*")
+      .select("*, in_stock")
       .eq("published", true)
       .order("created_at", { ascending: false })
       .order("id", { ascending: false })

@@ -78,6 +78,10 @@ export default function ItemCard({ item, inCart = false, owned = false, favorite
     <Button size="small" block disabled onClick={stopPropagation}>
       IN CART
     </Button>
+  ) : item.in_stock === false ? (
+    <Button size="small" block disabled onClick={stopPropagation}>
+      SOLD OUT
+    </Button>
   ) : (
     <Button
       type="primary"
