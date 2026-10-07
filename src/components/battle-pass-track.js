@@ -1,8 +1,10 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { Card } from "antd";
+import { itemRender } from "@/lib/renders";
 import { motion, useScroll, useSpring } from "motion/react";
 
 const cardStyle = {
@@ -21,6 +23,7 @@ const artStyle = {
 };
 
 function TierCard({ tier, reward, highlighted }) {
+  const cover = itemRender(reward);
   const body = (
     <Card
       variant="borderless"
@@ -31,7 +34,9 @@ function TierCard({ tier, reward, highlighted }) {
       style={highlighted ? highlightStyle : cardStyle}
     >
       <div className="text-[10px] text-muted mb-2">LEVEL {tier}</div>
-      <div className="h-20 mb-2.5" style={artStyle} />
+      <div className="relative h-20 mb-2.5 overflow-hidden" style={cover ? { background: "#0a0e12" } : artStyle}>
+        {cover && <Image src={cover.src} alt="" fill sizes="152px" quality={90} className="object-contain p-1" />}
+      </div>
       <div className="text-sm">{reward?.name ?? "Locked"}</div>
     </Card>
   );
