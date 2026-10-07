@@ -6,14 +6,18 @@ import { Button, Form } from "antd";
 import { DownOutlined } from "@ant-design/icons";
 import { logout } from "@/app/actions/auth";
 
-export const USER_MENU_LINKS = [
+const USER_MENU_LINKS = [
   { href: "/history", label: "HISTORY" },
   { href: "/favorites", label: "FAVORITES" },
   { href: "/profile", label: "PROFILE SETTINGS" },
-  { href: "/admin", label: "ADMIN" },
+  { href: "/admin", label: "ADMIN", staffOnly: true },
 ];
 
-export default function HeaderUserMenu({ displayName }) {
+export function userMenuLinks(isStaff) {
+  return USER_MENU_LINKS.filter((link) => isStaff || !link.staffOnly);
+}
+
+export default function HeaderUserMenu({ displayName, isStaff = false }) {
   const [open, setOpen] = useState(false);
   const [, startTransition] = useTransition();
   const containerRef = useRef(null);
@@ -40,7 +44,7 @@ export default function HeaderUserMenu({ displayName }) {
       </Button>
       {open && (
         <div className="absolute top-full right-0 mt-1.5 min-w-[180px] border border-hairline bg-card z-50 shadow-[0_8px_24px_rgba(0,0,0,0.45)]">
-          {USER_MENU_LINKS.map((item) => (
+          {userMenuLinks(isStaff).map((item) => (
             <Link
               key={item.href}
               href={item.href}

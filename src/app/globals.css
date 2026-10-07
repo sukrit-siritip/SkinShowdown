@@ -25,6 +25,11 @@
   --color-brass: #8b7355;
   --color-hover: #171c26;
   --color-divider: #1e2430;
+  --color-selected: #12171f;
+  --color-raised: #1a1f2e;
+  --color-input: #12161d;
+  --color-gold-dim: #6b5a22;
+  --color-danger-dim: #6d1622;
   --font-sans: var(--font-newsreader);
   --font-logo: var(--font-cinzel);
   --text-shadow-ember:
@@ -39,7 +44,6 @@ body {
 
 html {
   background-color: #131922;
-  /* Dark native UI (scrollbars, form controls) instead of the light defaults. */
   color-scheme: dark;
 }
 
@@ -69,7 +73,6 @@ body {
     auto !important;
 }
 
-/* Thin themed scrollbar for horizontal tracks (e.g. the battle pass row). */
 @utility scrollbar-thin {
   scrollbar-width: thin;
   scrollbar-color: --theme(--color-hairline) transparent;
@@ -78,8 +81,8 @@ body {
     scrollbar-color: --theme(--color-gold) transparent;
   }
 
-  /* Fallback for browsers without scrollbar-color (Safari, older Chrome). */
   &::-webkit-scrollbar {
+    width: 6px;
     height: 6px;
   }
   &::-webkit-scrollbar-track {
@@ -91,6 +94,10 @@ body {
   &:hover::-webkit-scrollbar-thumb {
     background: --theme(--color-gold);
   }
+}
+
+.ant-table-body {
+  @apply scrollbar-thin;
 }
 
 .ant-btn > span {
