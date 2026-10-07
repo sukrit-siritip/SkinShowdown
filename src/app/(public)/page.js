@@ -5,32 +5,50 @@ import ItemCard from "@/components/item-card";
 import StatCard from "@/components/stat-card";
 import { RevealGroup, RevealItem } from "@/components/reveal";
 
+const NEW_ITEMS_LIMIT = 8;
+
 export default async function Home() {
   const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const [{ data: slides }, { count: catalogSize }, { data: newItems }, { data: cartRows }] =
-    await Promise.all([
-      supabase
-        .from("events")
-        .select("id, title, tag, body, cta_label, cta_link, type")
-        .eq("active", true)
-        .order("sort_order", { ascending: true }),
-      supabase.from("items").select("id", { count: "exact", head: true }).eq("published", true),
-      supabase
-        .from("items")
-        .select("*")
-        .eq("published", true)
-        .order("created_at", { ascending: false })
-        .limit(8),
-      user
-        ? supabase.from("cart_items").select("item_id").eq("user_id", user.id)
-        : Promise.resolve({ data: [] }),
-    ]);
+  const [
+    { data: slides },
+    { count: catalogSize },
+    { data: newItems },
+    { data: cartRows },
+    { data: ownedRows },
+  ] = await Promise.all([
+    supabase
+      .from("events")
+      .select("id, title, tag, body, cta_label, cta_link, type")
+      .eq("active", true)
+      .order("sort_order", { ascending: true }),
+    supabase
+      .from("items")
+      .select("id", { count: "exact", head: true })
+      .eq("published", true),
+    supabase
+      .from("items")
+      .select("*")
+      .eq("published", true)
+      .order("created_at", { ascending: false })
+      .order("id", { ascending: false })
+      .limit(NEW_ITEMS_LIMIT),
+    user
+      ? supabase.from("cart_items").select("item_id").eq("user_id", user.id)
+      : Promise.resolve({ data: [] }),
+    user
+      ? supabase
+          .from("order_items")
+          .select("item_id, orders!inner(user_id)")
+          .eq("orders.user_id", user.id)
+      : Promise.resolve({ data: [] }),
+  ]);
 
   const cartItemIds = new Set((cartRows ?? []).map((row) => row.item_id));
+  const ownedItemIds = new Set((ownedRows ?? []).map((row) => row.item_id));
 
   const activeEvent = slides?.[0];
   const lastSync = new Date().toLocaleDateString("en-GB", {
@@ -86,7 +104,9 @@ export default async function Home() {
 
         <div className="flex items-baseline justify-between gap-4 flex-wrap mb-5">
           <div>
-            <div className="text-[11px] tracking-[0.2em] text-tan mb-1.5">JUST ADDED</div>
+            <div className="text-[11px] tracking-[0.2em] text-tan mb-1.5">
+              JUST ADDED
+            </div>
             <h2 className="font-bold text-3xl m-0">New Skins &amp; DLC</h2>
           </div>
           <Link href="/items" className="text-xs text-gold!">
@@ -95,13 +115,14 @@ export default async function Home() {
         </div>
 
         {newItems && newItems.length > 0 ? (
-          <RevealGroup
-            className="grid gap-4 items-start"
-            style={{ gridTemplateColumns: "repeat(auto-fill, minmax(232px, 1fr))" }}
-          >
+          <RevealGroup className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 items-start">
             {newItems.map((item) => (
               <RevealItem key={item.id}>
-                <ItemCard item={item} inCart={cartItemIds.has(item.id)} />
+                <ItemCard
+                  item={item}
+                  inCart={cartItemIds.has(item.id)}
+                  owned={ownedItemIds.has(item.id)}
+                />
               </RevealItem>
             ))}
           </RevealGroup>
