@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Button, Form } from "antd";
 import { DownOutlined } from "@ant-design/icons";
 import HeaderNavLink from "@/components/header-nav-link";
-import HeaderUserMenu, { USER_MENU_LINKS } from "@/components/header-user-menu";
+import HeaderUserMenu, { userMenuLinks } from "@/components/header-user-menu";
 import { logout } from "@/app/actions/auth";
 
 const NAV_LINKS = [
@@ -14,7 +14,7 @@ const NAV_LINKS = [
   { href: "/battle-pass", label: "BATTLE PASS" },
 ];
 
-export default function HeaderShell({ user, displayName, cartCount }) {
+export default function HeaderShell({ user, displayName, cartCount, isStaff }) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
   const [, startTransition] = useTransition();
@@ -61,7 +61,7 @@ export default function HeaderShell({ user, displayName, cartCount }) {
             </Button>
           </Link>
           {user ? (
-            <HeaderUserMenu displayName={displayName} />
+            <HeaderUserMenu displayName={displayName} isStaff={isStaff} />
           ) : (
             <Link href="/login" className="block">
               <Button
@@ -148,7 +148,7 @@ export default function HeaderShell({ user, displayName, cartCount }) {
                 >
                   <div className="overflow-hidden">
                     <div className="flex flex-col pl-3 pb-1">
-                      {USER_MENU_LINKS.map((item) => (
+                      {userMenuLinks(isStaff).map((item) => (
                         <Link
                           key={item.href}
                           href={item.href}
