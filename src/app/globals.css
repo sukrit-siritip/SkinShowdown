@@ -69,6 +69,30 @@ body {
     auto !important;
 }
 
+/* Thin themed scrollbar for horizontal tracks (e.g. the battle pass row). */
+@utility scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: --theme(--color-hairline) transparent;
+
+  &:hover {
+    scrollbar-color: --theme(--color-gold) transparent;
+  }
+
+  /* Fallback for browsers without scrollbar-color (Safari, older Chrome). */
+  &::-webkit-scrollbar {
+    height: 6px;
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: --theme(--color-hairline);
+  }
+  &:hover::-webkit-scrollbar-thumb {
+    background: --theme(--color-gold);
+  }
+}
+
 .ant-btn > span {
   transform: translateY(0.14em);
 }
