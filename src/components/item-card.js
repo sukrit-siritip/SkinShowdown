@@ -1,8 +1,10 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { itemRender } from "@/lib/renders";
 import { Card, Button, App } from "antd";
 import { HeartFilled, HeartOutlined } from "@ant-design/icons";
 import { addToCart, toggleFavorite } from "@/app/actions/items";
@@ -10,6 +12,7 @@ import { addToCart, toggleFavorite } from "@/app/actions/items";
 export default function ItemCard({ item, inCart = false, owned = false, favorited }) {
   const { id, name, base, slot, price, is_dlc, dlc_name, dlc_steam_url, is_battle_pass } = item;
   const showPrice = price != null;
+  const cover = itemRender(item);
   const [pending, startTransition] = useTransition();
   const [addedLocally, setAddedLocally] = useState(false);
   const [isFavorited, setIsFavorited] = useState(favorited);
@@ -101,10 +104,21 @@ export default function ItemCard({ item, inCart = false, owned = false, favorite
       <div
         className="h-[150px] relative flex flex-col justify-between p-2.5"
         style={{
-          background:
-            "repeating-linear-gradient(135deg, #131820 0 8px, #181f2a 8px 16px)",
+          background: cover
+            ? "#0a0e12"
+            : "repeating-linear-gradient(135deg, #131820 0 8px, #181f2a 8px 16px)",
         }}
       >
+        {cover && (
+          <Image
+            src={cover.src}
+            alt=""
+            fill
+            sizes="(min-width: 1024px) 300px, (min-width: 768px) 50vw, 100vw"
+            quality={90}
+            className="object-contain p-2"
+          />
+        )}
         <div
           className="absolute inset-0"
           style={{

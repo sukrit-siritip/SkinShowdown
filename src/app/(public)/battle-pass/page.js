@@ -22,7 +22,7 @@ export default async function BattlePassPage({ searchParams }) {
   const { data: rewards } = pass
     ? await supabase
         .from("items")
-        .select("id, name, battle_pass_tier")
+        .select("id, name, battle_pass_tier, render_path, render_width, render_height")
         .eq("battle_pass_event_id", pass.id)
         .eq("published", true)
         .order("battle_pass_tier", { ascending: true })

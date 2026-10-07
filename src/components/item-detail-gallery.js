@@ -1,61 +1,53 @@
 "use client";
 
-import { useState } from "react";
+import { getImageProps } from "next/image";
 import { Image } from "antd";
+import { itemRender } from "@/lib/renders";
 
-function placeholderSrc(label) {
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720">
-    <defs>
-      <pattern id="stripes" width="24" height="24" patternTransform="rotate(135)" patternUnits="userSpaceOnUse">
-        <rect width="12" height="24" fill="#121822" />
-        <rect x="12" width="12" height="24" fill="#182029" />
-      </pattern>
-    </defs>
-    <rect width="1280" height="720" fill="url(#stripes)" />
-    <text x="50%" y="50%" text-anchor="middle" dominant-baseline="middle"
-      font-family="Newsreader, serif" font-size="22" fill="#5b6470">${label}</text>
-  </svg>`;
-  return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
-}
+export default function ItemDetailGallery({ item }) {
+  const render = itemRender(item);
 
-const SHOTS = [
-  { key: "art", label: "2D ART" },
-  { key: "game", label: "IN GAME" },
-];
+  if (!render) {
+    return (
+      <div
+        className="border border-hairline aspect-video flex items-center justify-center text-sm text-dim"
+        style={{ background: "repeating-linear-gradient(135deg, #121822 0 12px, #182029 12px 24px)" }}
+      >
+        NO RENDER YET
+      </div>
+    );
+  }
 
-export default function ItemDetailGallery() {
-  const [active, setActive] = useState(0);
-  const sources = SHOTS.map((shot) => placeholderSrc(shot.label));
+  const {
+    props: { src, srcSet, sizes, loading, fetchPriority, decoding },
+  } = getImageProps({
+    src: render.src,
+    alt: item.name,
+    width: render.width,
+    height: render.height,
+    quality: 90,
+    priority: true,
+    sizes: "(min-width: 1024px) 55vw, 100vw",
+  });
 
   return (
-    <div>
-      <div className="relative border border-hairline overflow-hidden">
-        <Image
-          src={sources[active]}
-          alt={SHOTS[active].label}
-          width="100%"
-          height="100%"
-          className="aspect-video! object-cover!"
-          rootClassName="block!"
-        />
-        <div className="absolute bottom-3.5 right-3.5 text-[10px] text-muted pointer-events-none">
-          {active + 1} / {SHOTS.length} · 2560×1600
-        </div>
-      </div>
-
-      <div className="flex gap-2.5 mt-3 flex-wrap">
-        {SHOTS.map((shot, i) => (
-          <button
-            key={shot.key}
-            type="button"
-            onClick={() => setActive(i)}
-            className={`w-20 h-14 overflow-hidden border transition-colors ${
-              active === i ? "border-gold" : "border-hairline hover:border-brass"
-            }`}
-          >
-            <img src={sources[i]} alt={shot.label} className="w-full h-full object-cover" />
-          </button>
-        ))}
+    <div className="relative border border-hairline overflow-hidden aspect-video bg-background">
+      <Image
+        src={src}
+        srcSet={srcSet}
+        sizes={sizes}
+        loading={loading}
+        fetchPriority={fetchPriority}
+        decoding={decoding}
+        alt={item.name}
+        width="100%"
+        height="100%"
+        rootClassName="block! h-full!"
+        className="object-contain! h-full! p-2!"
+        preview={{ src: render.src }}
+      />
+      <div className="absolute bottom-3.5 right-3.5 text-[10px] text-muted pointer-events-none">
+        {render.width}×{render.height}
       </div>
     </div>
   );

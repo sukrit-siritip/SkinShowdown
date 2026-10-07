@@ -111,7 +111,7 @@ export default async function ItemDetailPage({ params }) {
     <main className="flex-1 max-w-[1320px] mx-auto px-6 pt-9 pb-24 w-full">
       <RevealGroup className="grid grid-cols-1 md:grid-cols-[minmax(300px,1.5fr)_minmax(260px,0.62fr)] gap-8 items-start">
         <RevealItem>
-          <ItemDetailGallery />
+          <ItemDetailGallery item={item} />
         </RevealItem>
 
         <RevealItem>
