@@ -18,7 +18,7 @@ const cinzel = Cinzel({
 });
 
 export const metadata = {
-  title: "SkinShowdown",
+  title: { default: "Skin Showdown", template: "%s · Skin Showdown" },
   description: "Browse skins and cosmetics for Hunt: Showdown 1896.",
 };
 

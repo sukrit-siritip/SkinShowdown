@@ -4,6 +4,8 @@ import { createClient } from "@/lib/supabase/server";
 import CartLine from "@/components/cart-line";
 import ItemCard from "@/components/item-card";
 
+export const metadata = { title: "Your Cart" };
+
 export default async function CartPage() {
   const supabase = await createClient();
   const {

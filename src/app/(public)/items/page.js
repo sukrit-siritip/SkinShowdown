@@ -9,6 +9,8 @@ import { TYPE_GROUPS } from "@/lib/item-type-groups";
 
 const PAGE_SIZE = 12;
 
+export const metadata = { title: "All Skins" };
+
 export default async function ItemsPage({ searchParams }) {
   const { type, weapon, utility, q, sort, page: pageParam } = await searchParams;
   const page = Math.max(1, Number(pageParam) || 1);

@@ -4,6 +4,8 @@ import { createClient } from "@/lib/supabase/server";
 import ItemCard from "@/components/item-card";
 import { RevealGroup, RevealItem } from "@/components/reveal";
 
+export const metadata = { title: "Favorites" };
+
 export default async function FavoritesPage() {
   const supabase = await createClient();
   const {

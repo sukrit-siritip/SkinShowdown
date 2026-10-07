@@ -3,7 +3,7 @@ import Header from "@/components/header";
 import Footer from "@/components/footer";
 
 export const metadata = {
-  title: "Page Not Found — SkinShowdown",
+  title: "Page Not Found",
 };
 
 export default function NotFound() {

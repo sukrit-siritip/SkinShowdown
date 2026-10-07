@@ -5,6 +5,8 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import CheckoutSuccessBadge from "@/components/checkout-success-badge";
 import { RevealGroup, RevealItem } from "@/components/reveal";
 
+export const metadata = { title: "Order Confirmed" };
+
 export default async function CheckoutSuccessPage({ searchParams }) {
   const { order: orderId } = await searchParams;
   const supabase = await createClient();

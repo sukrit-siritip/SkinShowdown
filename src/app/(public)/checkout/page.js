@@ -3,6 +3,8 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import CheckoutForm from "@/components/checkout-form-loader";
 
+export const metadata = { title: "Checkout" };
+
 export default async function CheckoutPage() {
   const supabase = await createClient();
   const {

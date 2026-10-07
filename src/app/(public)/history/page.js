@@ -3,6 +3,8 @@ import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import HistoryFilters from "@/components/history-filters-loader";
 
+export const metadata = { title: "Purchase History" };
+
 export default async function HistoryPage({ searchParams }) {
   const { from, to } = await searchParams;
   const supabase = await createClient();
