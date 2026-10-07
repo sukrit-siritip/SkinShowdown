@@ -39,6 +39,8 @@ body {
 
 html {
   background-color: #131922;
+  /* Dark native UI (scrollbars, form controls) instead of the light defaults. */
+  color-scheme: dark;
 }
 
 body::before {
