@@ -34,7 +34,7 @@ export default function ItemDetailActions({ item, initialFavorited, initialInCar
   if (item.is_battle_pass) {
     return (
       <div className="flex gap-2.5 items-stretch">
-        <Link href="/battle-pass" className="flex-1">
+        <Link href={`/battle-pass?item=${item.id}`} className="flex-1">
           <Button type="primary" block>
             BATTLE PASS
           </Button>

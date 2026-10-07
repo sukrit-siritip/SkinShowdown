@@ -50,7 +50,7 @@ export default function ItemCard({ item, inCart = false, owned = false, favorite
   );
 
   const secondaryButton = is_battle_pass ? (
-    <Link href="/battle-pass" className="block w-full" onClick={stopPropagation}>
+    <Link href={`/battle-pass?item=${id}`} className="block w-full" onClick={stopPropagation}>
       <Button type="primary" size="small" block>
         BATTLE PASS
       </Button>
