@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { isDemoUser } from "@/lib/demo";
 
 export async function updateProfile(prevState, formData) {
   const name = formData.get("name")?.toString().trim();
@@ -28,6 +29,7 @@ export async function updateProfile(prevState, formData) {
   } = await supabase.auth.getUser();
 
   if (!user) redirect("/login");
+  if (isDemoUser(user)) return { error: "The demo account's profile can't be changed." };
 
   const authUpdates = {};
   if (email !== user.email) authUpdates.email = email;

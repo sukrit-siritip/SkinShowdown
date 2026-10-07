@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import ProfileForm from "@/components/profile-form";
+import { isDemoUser } from "@/lib/demo";
 
 export const metadata = { title: "Profile Settings" };
 
@@ -24,7 +25,11 @@ export default async function ProfilePage() {
       <h1 className="font-bold text-4xl m-0 mb-7">Profile Settings</h1>
 
       <div className="border border-hairline bg-card p-6">
-        <ProfileForm initialName={profile?.display_name ?? ""} initialEmail={user.email ?? ""} />
+        <ProfileForm
+          initialName={profile?.display_name ?? ""}
+          initialEmail={user.email ?? ""}
+          locked={isDemoUser(user)}
+        />
       </div>
     </main>
   );

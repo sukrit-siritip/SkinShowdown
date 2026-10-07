@@ -8,7 +8,7 @@ function label(text) {
   return <span className="text-[11px] tracking-[0.14em] text-tan">{text}</span>;
 }
 
-export default function ProfileForm({ initialName, initialEmail }) {
+export default function ProfileForm({ initialName, initialEmail, locked = false }) {
   const [state, formAction, pending] = useActionState(updateProfile, undefined);
 
   const onFinish = (values) => {
@@ -25,8 +25,17 @@ export default function ProfileForm({ initialName, initialEmail }) {
       layout="vertical"
       requiredMark={false}
       onFinish={onFinish}
+      disabled={locked}
       initialValues={{ name: initialName, email: initialEmail }}
     >
+      {locked && (
+        <Alert
+          type="info"
+          title="Demo account — profile changes are disabled."
+          showIcon
+          className="mb-4!"
+        />
+      )}
       <Form.Item
         name="name"
         label={label("DISPLAY NAME")}

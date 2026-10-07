@@ -3,6 +3,8 @@
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
+import { DEMO_EMAIL, DEMO_PASSWORD } from "@/lib/demo";
 
 async function siteOrigin() {
   const headersList = await headers();
@@ -27,15 +29,28 @@ export async function login(prevState, formData) {
   redirect("/");
 }
 
-const DEMO_EMAIL = "demo@skinshowdown.app";
-const DEMO_PASSWORD = "Demo12345!";
+async function restoreDemoCredentials() {
+  const admin = createAdminClient();
+  const { data, error } = await admin.auth.admin.listUsers({ perPage: 1000 });
+  if (error) return false;
+  const demo = data.users.find((u) => u.email === DEMO_EMAIL || u.new_email === DEMO_EMAIL);
+  if (!demo) return false;
+  const { error: updateError } = await admin.auth.admin.updateUserById(demo.id, {
+    email: DEMO_EMAIL,
+    password: DEMO_PASSWORD,
+    email_confirm: true,
+  });
+  return !updateError;
+}
 
 export async function loginDemo() {
   const supabase = await createClient();
-  const { error } = await supabase.auth.signInWithPassword({
-    email: DEMO_EMAIL,
-    password: DEMO_PASSWORD,
-  });
+  const credentials = { email: DEMO_EMAIL, password: DEMO_PASSWORD };
+  let { error } = await supabase.auth.signInWithPassword(credentials);
+
+  if (error && (await restoreDemoCredentials())) {
+    ({ error } = await supabase.auth.signInWithPassword(credentials));
+  }
 
   if (error) {
     return { error: error.message };
