@@ -26,7 +26,10 @@
   --color-hover: #171c26;
   --color-divider: #1e2430;
   --font-sans: var(--font-newsreader);
-  --font-logo: var(--font-cinzel-decorative);
+  --font-logo: var(--font-cinzel);
+  --text-shadow-ember:
+    0 0 6px rgba(224, 169, 42, 0.55), 0 0 18px rgba(196, 30, 58, 0.45),
+    0 2px 0 #000;
 }
 
 html,

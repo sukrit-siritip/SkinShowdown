@@ -1,5 +1,5 @@
 import { AntdRegistry } from "@ant-design/nextjs-registry";
-import { Newsreader, Cinzel_Decorative } from "next/font/google";
+import { Newsreader, Cinzel } from "next/font/google";
 import dynamic from "next/dynamic";
 import ThemeProvider from "./theme-provider";
 import "./globals.css";
@@ -11,9 +11,9 @@ const newsreader = Newsreader({
   subsets: ["latin"],
 });
 
-const cinzelDecorative = Cinzel_Decorative({
-  variable: "--font-cinzel-decorative",
-  weight: ["700"],
+const cinzel = Cinzel({
+  variable: "--font-cinzel",
+  weight: ["900"],
   subsets: ["latin"],
 });
 
@@ -26,7 +26,7 @@ export default function RootLayout({ children }) {
   return (
     <html
       lang="en"
-      className={`${newsreader.variable} ${cinzelDecorative.variable} h-full antialiased`}
+      className={`${newsreader.variable} ${cinzel.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
         <AntdRegistry>

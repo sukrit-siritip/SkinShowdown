@@ -66,7 +66,7 @@ export default function AgeGate() {
       className="fixed inset-0 z-70 flex items-center justify-center p-6 bg-[rgba(4,6,9,0.96)]"
     >
       <div className="max-w-[440px] border border-hairline bg-card p-8 text-center">
-        <div className="font-logo font-bold text-xl text-foreground mb-3.5">
+        <div className="font-logo font-black text-shadow-ember text-xl text-foreground mb-3.5 select-none">
           SKIN<span className="text-gold">SHOWDOWN</span>
         </div>
         <p className="text-sm leading-[1.7] text-tan mb-5.5">

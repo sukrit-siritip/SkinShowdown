@@ -24,12 +24,12 @@ export default function HeaderShell({ user, displayName, cartCount }) {
       <div className="relative max-w-[1320px] mx-auto px-6 flex items-center justify-between gap-5 flex-wrap">
         <Link
           href="/"
-          className="flex flex-col items-start justify-center py-[9px] leading-none"
+          className="flex flex-col items-center justify-center py-[9px] leading-none select-none"
         >
-          <span className="relative font-logo font-bold text-2xl tracking-[0.04em] text-foreground after:content-[''] after:absolute after:left-0 after:right-0 after:-bottom-[3px] after:h-[3px] after:bg-brass after:opacity-80 after:[clip-path:polygon(0_0,10%_100%,20%_10%,30%_100%,40%_20%,50%_100%,60%_5%,70%_100%,80%_15%,90%_100%,100%_0)]">
+          <span className="pl-[0.04em] font-logo font-black text-shadow-ember text-2xl tracking-[0.04em] text-foreground">
             SKIN
           </span>
-          <span className="mt-1 text-[10px] tracking-[0.36em] text-gold">
+          <span className="mt-1 pl-[0.36em] text-[10px] tracking-[0.36em] text-gold">
             SHOWDOWN
           </span>
         </Link>
@@ -45,7 +45,11 @@ export default function HeaderShell({ user, displayName, cartCount }) {
         </nav>
 
         <div className="hidden sm:flex items-center gap-3.5 py-2.5">
-          <Link href="/cart" aria-label={`View cart, ${cartCount} items`} className="block">
+          <Link
+            href="/cart"
+            aria-label={`View cart, ${cartCount} items`}
+            className="block"
+          >
             <Button
               type="text"
               className="flex! items-center! gap-2! h-auto! px-3! py-[7px]! bg-transparent! border! border-hairline! transition-all hover:border-gold! hover:bg-[#12161d]!"
@@ -71,7 +75,11 @@ export default function HeaderShell({ user, displayName, cartCount }) {
         </div>
 
         <div className="flex sm:hidden items-center gap-2">
-          <Link href="/cart" aria-label={`View cart, ${cartCount} items`} className="block">
+          <Link
+            href="/cart"
+            aria-label={`View cart, ${cartCount} items`}
+            className="block"
+          >
             <Button
               type="text"
               className="flex! items-center! gap-1.5! h-auto! px-2! py-1.5! bg-transparent! border! border-hairline!"
