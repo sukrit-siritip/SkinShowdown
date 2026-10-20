@@ -1,7 +1,6 @@
 "use client";
 
 import { useActionState, useState, useTransition } from "react";
-import Link from "next/link";
 import { Button, Alert } from "antd";
 import { HeartFilled, HeartOutlined } from "@ant-design/icons";
 import { addToCart, toggleFavorite } from "@/app/actions/items";
@@ -30,37 +29,6 @@ export default function ItemDetailActions({ item, initialFavorited, initialInCar
       icon={favorited ? <HeartFilled className="text-danger!" /> : <HeartOutlined />}
     />
   );
-
-  if (item.is_battle_pass) {
-    return (
-      <div className="flex gap-2.5 items-stretch">
-        <Link href={`/battle-pass?item=${item.id}`} className="flex-1">
-          <Button type="primary" block>
-            BATTLE PASS
-          </Button>
-        </Link>
-        {favoriteButton}
-      </div>
-    );
-  }
-
-  if (item.is_dlc) {
-    return (
-      <div className="flex gap-2.5 items-stretch">
-        <Button
-          type="primary"
-          block
-          className="flex-1"
-          href={item.dlc_steam_url || "#"}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          STEAM
-        </Button>
-        {favoriteButton}
-      </div>
-    );
-  }
 
   if (owned) {
     return (

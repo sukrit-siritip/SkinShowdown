@@ -11,7 +11,6 @@ import { logout } from "@/app/actions/auth";
 const NAV_LINKS = [
   { href: "/", label: "HOME" },
   { href: "/items", label: "ITEMS" },
-  { href: "/battle-pass", label: "BATTLE PASS" },
 ];
 
 export default function HeaderShell({ user, displayName, cartCount, isStaff }) {

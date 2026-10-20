@@ -122,12 +122,6 @@ export default async function ItemDetailPage({ params }) {
             {item.name}
           </h1>
 
-          {item.is_dlc && (
-            <div className="inline-block text-[11px] tracking-[0.1em] text-gold-light border border-[#6b5a22] px-2.5 py-1 mb-3.5">
-              DLC · {item.dlc_name}
-            </div>
-          )}
-
           <p className="text-[15px] leading-relaxed opacity-72 mb-5.5">
             {item.description}
           </p>

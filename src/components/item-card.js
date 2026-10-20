@@ -10,7 +10,7 @@ import { HeartFilled, HeartOutlined } from "@ant-design/icons";
 import { addToCart, toggleFavorite } from "@/app/actions/items";
 
 export default function ItemCard({ item, inCart = false, owned = false, favorited }) {
-  const { id, name, base, slot, price, is_dlc, dlc_name, dlc_steam_url, is_battle_pass } = item;
+  const { id, name, base, slot, price } = item;
   const showPrice = price != null;
   const cover = itemRender(item);
   const [pending, startTransition] = useTransition();
@@ -52,25 +52,7 @@ export default function ItemCard({ item, inCart = false, owned = false, favorite
     </Link>
   );
 
-  const secondaryButton = is_battle_pass ? (
-    <Link href={`/battle-pass?item=${id}`} className="block w-full" onClick={stopPropagation}>
-      <Button type="primary" size="small" block>
-        BATTLE PASS
-      </Button>
-    </Link>
-  ) : is_dlc ? (
-    <Button
-      type="primary"
-      size="small"
-      block
-      href={dlc_steam_url || "#"}
-      target="_blank"
-      rel="noopener noreferrer"
-      onClick={stopPropagation}
-    >
-      STEAM
-    </Button>
-  ) : owned ? (
+  const secondaryButton = owned ? (
     <Button size="small" block disabled onClick={stopPropagation}>
       OWNED
     </Button>
@@ -145,14 +127,6 @@ export default function ItemCard({ item, inCart = false, owned = false, favorite
         <div className="relative">
           <div className="text-[15px] font-semibold leading-tight">{name}</div>
           <div className="text-[11px] text-tan">{base}</div>
-          {is_dlc && (
-            <div className="text-[9px] text-gold tracking-[0.08em] mt-0.5">
-              DLC · {dlc_name}
-            </div>
-          )}
-          {is_battle_pass && (
-            <div className="text-[9px] text-gold tracking-[0.08em] mt-0.5">BATTLE PASS</div>
-          )}
         </div>
         <div className="relative flex items-end justify-between">
           <span className="text-[10px] text-dim">{slot}</span>

@@ -8,7 +8,6 @@ import { ITEM_TYPE_BY_VALUE } from "@/lib/item-type-groups";
 import { RENDER_BUCKET, isRenderPath } from "@/lib/renders";
 
 const MAX_PRICE = 9999.99;
-const STEAM_URL = /^https:\/\/store\.steampowered\.com\/\S+$/;
 
 function text(formData, key) {
   return formData.get(key)?.toString().trim() ?? "";
@@ -19,8 +18,6 @@ async function parseItem(supabase, formData) {
   const type = ITEM_TYPE_BY_VALUE[text(formData, "type")];
   const base = type?.fixedBase ?? text(formData, "base");
   const description = text(formData, "description");
-  const isBattlePass = formData.get("is_battle_pass") === "true";
-  const isDlc = formData.get("is_dlc") === "true";
   const published = formData.get("published") === "true";
 
   if (!name || name.length > 80) return { error: "Name is required (80 characters max)." };
@@ -35,7 +32,11 @@ async function parseItem(supabase, formData) {
     if (!known) return { error: `Pick a ${type.weapon ? "weapon" : "base"} from the list.` };
   }
   if (description.length > 500) return { error: "Description is 500 characters max." };
-  if (isBattlePass && isDlc) return { error: "An item can't be both Battle Pass and DLC." };
+
+  const price = Number(text(formData, "price"));
+  if (!Number.isFinite(price) || price <= 0 || price > MAX_PRICE) {
+    return { error: `Price must be between $0.01 and $${MAX_PRICE}.` };
+  }
 
   const row = {
     name,
@@ -45,13 +46,7 @@ async function parseItem(supabase, formData) {
     weapon: type.weapon ? base : null,
     description: description || null,
     published,
-    is_battle_pass: isBattlePass,
-    battle_pass_event_id: null,
-    battle_pass_tier: null,
-    is_dlc: isDlc,
-    dlc_name: null,
-    dlc_steam_url: null,
-    price: null,
+    price: Math.round(price * 100) / 100,
   };
 
   const renderPath = text(formData, "render_path");
@@ -70,36 +65,6 @@ async function parseItem(supabase, formData) {
     render_height: renderPath ? renderHeight : null,
   });
 
-  if (isBattlePass) {
-    const eventId = text(formData, "battle_pass_event_id");
-    const tier = Number(text(formData, "battle_pass_tier"));
-    const { data: pass } = await supabase
-      .from("events")
-      .select("id, total_tiers")
-      .eq("id", eventId)
-      .eq("type", "Battle Pass")
-      .maybeSingle();
-    if (!pass) return { error: "Pick a battle pass." };
-    if (!Number.isInteger(tier) || tier < 1 || tier > (pass.total_tiers ?? Infinity)) {
-      return { error: `Level must be between 1 and ${pass.total_tiers}.` };
-    }
-    row.battle_pass_event_id = pass.id;
-    row.battle_pass_tier = tier;
-  } else if (isDlc) {
-    const dlcName = text(formData, "dlc_name");
-    const steamUrl = text(formData, "dlc_steam_url");
-    if (!dlcName || dlcName.length > 60) return { error: "DLC name is required (60 characters max)." };
-    if (!STEAM_URL.test(steamUrl)) return { error: "Steam URL must start with https://store.steampowered.com/." };
-    row.dlc_name = dlcName;
-    row.dlc_steam_url = steamUrl;
-  } else {
-    const price = Number(text(formData, "price"));
-    if (!Number.isFinite(price) || price <= 0 || price > MAX_PRICE) {
-      return { error: `Price must be between $0.01 and $${MAX_PRICE}.` };
-    }
-    row.price = Math.round(price * 100) / 100;
-  }
-
   return { row };
 }
 
@@ -117,7 +82,6 @@ function revalidateCatalog(id) {
   revalidatePath("/admin", "layout");
   revalidatePath("/");
   revalidatePath("/items");
-  revalidatePath("/battle-pass");
   if (id) revalidatePath(`/items/${id}`);
 }
 

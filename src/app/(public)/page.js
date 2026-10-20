@@ -62,7 +62,7 @@ export default async function Home() {
       <HeroCarousel slides={slides ?? []} />
 
       <main className="flex-1 max-w-[1320px] mx-auto px-6 pt-11 pb-24 w-full">
-        <RevealGroup className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-14">
+        <RevealGroup className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-14">
           {activeEvent && (
             <RevealItem>
               <StatCard
@@ -88,18 +88,6 @@ export default async function Home() {
               description="data as of this date · prices in USD"
             />
           </RevealItem>
-          <RevealItem>
-            <StatCard
-              href="/battle-pass"
-              label="BATTLE PASS"
-              labelClassName="text-gold"
-              value="Old Testament"
-              valueClassName="text-xl font-semibold mb-1.5"
-              description="See all tier rewards →"
-              descriptionClassName="text-tan"
-              style={{ border: "1px solid #6b5a22", background: "#13110a" }}
-            />
-          </RevealItem>
         </RevealGroup>
 
         <div className="flex items-baseline justify-between gap-4 flex-wrap mb-5">
@@ -107,7 +95,7 @@ export default async function Home() {
             <div className="text-[11px] tracking-[0.2em] text-tan mb-1.5">
               JUST ADDED
             </div>
-            <h2 className="font-bold text-3xl m-0">New Skins &amp; DLC</h2>
+            <h2 className="font-bold text-3xl m-0">New Skins</h2>
           </div>
           <Link href="/items" className="text-xs text-gold!">
             VIEW ALL {catalogSize ?? 0} →

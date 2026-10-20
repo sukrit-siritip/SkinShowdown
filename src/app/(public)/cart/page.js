@@ -35,7 +35,6 @@ export default async function CartPage() {
         .from("items")
         .select("*, in_stock")
         .eq("published", true)
-        .eq("is_battle_pass", false)
         .order("created_at", { ascending: false })
         .limit(8),
       supabase.from("order_items").select("item_id, orders!inner(user_id)").eq("orders.user_id", user.id),

@@ -11,18 +11,8 @@ export default async function AdminItemsPage({ searchParams }) {
   const { id, new: isNew } = await searchParams;
   const supabase = await createClient();
 
-  const [{ data: items }, { data: passes }, { data: bases }] = await Promise.all([
-    supabase
-      .from("items")
-      .select(
-        "id, name, type, base, price, published, is_battle_pass, battle_pass_event_id, battle_pass_tier, is_dlc, dlc_name"
-      )
-      .order("name"),
-    supabase
-      .from("events")
-      .select("id, title, total_tiers")
-      .eq("type", "Battle Pass")
-      .order("created_at", { ascending: false }),
+  const [{ data: items }, { data: bases }] = await Promise.all([
+    supabase.from("items").select("id, name, type, base, price, published").order("name"),
     supabase.from("item_bases").select("type, name").order("name"),
   ]);
 
@@ -41,13 +31,6 @@ export default async function AdminItemsPage({ searchParams }) {
       ])
     : [{ data: null }, { count: null }];
 
-  const takenTiers = {};
-  for (const item of items ?? []) {
-    if (item.battle_pass_event_id && item.id !== selected?.id) {
-      (takenTiers[item.battle_pass_event_id] ??= []).push(item.battle_pass_tier);
-    }
-  }
-  const dlcNames = [...new Set((items ?? []).map((i) => i.dlc_name).filter(Boolean))].sort();
   const showForm = Boolean(isNew || selected);
 
   return (
@@ -74,9 +57,6 @@ export default async function AdminItemsPage({ searchParams }) {
             key={selected?.id ?? "new"}
             item={selected}
             codesLeft={codesLeft}
-            passes={passes ?? []}
-            takenTiers={takenTiers}
-            dlcNames={dlcNames}
             basesByType={basesByType}
             readOnly={role !== "admin"}
           />

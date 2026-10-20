@@ -2,7 +2,7 @@
 
 import { useActionState, useEffect, useRef, useState, useTransition } from "react";
 import Link from "next/link";
-import { App, AutoComplete, Button, Form, Input, InputNumber, Popconfirm, Select, Switch } from "antd";
+import { App, Button, Form, Input, InputNumber, Popconfirm, Select, Switch } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { addItemBase, deleteItem, saveItem } from "@/app/actions/admin-items";
 import { ITEM_TYPES, ITEM_TYPE_BY_VALUE } from "@/lib/item-type-groups";
@@ -69,9 +69,6 @@ function Note({ children }) {
 export default function AdminItemForm({
   item,
   codesLeft,
-  passes,
-  takenTiers,
-  dlcNames,
   basesByType,
   readOnly,
 }) {
@@ -86,10 +83,6 @@ export default function AdminItemForm({
   const uploadedRef = useRef(null);
 
   const type = Form.useWatch("type", form);
-  const isBattlePass = Form.useWatch("is_battle_pass", form);
-  const isDlc = Form.useWatch("is_dlc", form);
-  const passId = Form.useWatch("battle_pass_event_id", form);
-  const pass = passes.find((p) => p.id === passId);
   const typeInfo = ITEM_TYPE_BY_VALUE[type];
 
   const render = Form.useWatch("render", form);
@@ -143,8 +136,6 @@ export default function AdminItemForm({
     for (const [key, value] of Object.entries({ ...rest, ...renderFields })) {
       if (value !== undefined && value !== null) fd.set(key, String(value));
     }
-    fd.set("is_battle_pass", String(Boolean(values.is_battle_pass)));
-    fd.set("is_dlc", String(Boolean(values.is_dlc)));
     fd.set("published", String(Boolean(values.published)));
     startSave(() => formAction(fd));
   };
@@ -187,17 +178,11 @@ export default function AdminItemForm({
         onFinish={onFinish}
         initialValues={{
           name: item?.name,
-          type: item?.type ?? "rifle",
+          type: item?.type ?? "compact_ammo",
           base: item?.base,
           price: item?.price != null ? Number(item.price) : undefined,
           description: item?.description ?? "",
           published: item?.published ?? false,
-          is_battle_pass: item?.is_battle_pass ?? false,
-          battle_pass_event_id: item?.battle_pass_event_id ?? passes[0]?.id,
-          battle_pass_tier: item?.battle_pass_tier ?? undefined,
-          is_dlc: item?.is_dlc ?? false,
-          dlc_name: item?.dlc_name ?? undefined,
-          dlc_steam_url: item?.dlc_steam_url ?? undefined,
           render: itemRender(item),
         }}
       >
@@ -230,100 +215,17 @@ export default function AdminItemForm({
           )}
         </div>
 
-        <ToggleRow
-          name="is_battle_pass"
-          label="Is Battle Pass?"
-          onChange={(on) => on && form.setFieldValue("is_dlc", false)}
-        />
-        {isBattlePass && (
-          <div className="grid grid-cols-[minmax(0,1fr)_110px] gap-3 pt-1">
-            <Form.Item
-              name="battle_pass_event_id"
-              label={<Label>PASS</Label>}
-              rules={[{ required: true, message: "Pick a pass." }]}
-            >
-              <Select
-                options={passes.map((p) => ({ value: p.id, label: p.title }))}
-                notFoundContent="No battle pass events yet"
-              />
-            </Form.Item>
-            <Form.Item
-              name="battle_pass_tier"
-              label={<Label>LEVEL</Label>}
-              dependencies={["battle_pass_event_id"]}
-              rules={[
-                { required: true, message: "Required." },
-                {
-                  validator: (_, value) =>
-                    value && takenTiers[passId]?.includes(value)
-                      ? Promise.reject(new Error(`Level ${value} is taken.`))
-                      : Promise.resolve(),
-                },
-              ]}
-            >
-              <InputNumber min={1} max={pass?.total_tiers ?? undefined} precision={0} className="w-full!" />
-            </Form.Item>
-          </div>
-        )}
-
-        <ToggleRow
-          name="is_dlc"
-          label="Is DLC?"
-          onChange={(on) => on && form.setFieldValue("is_battle_pass", false)}
-        />
-        {isDlc && (
-          <div className="pt-1">
-            <Form.Item
-              name="dlc_name"
-              label={<Label>DLC NAME</Label>}
-              rules={[{ required: true, whitespace: true, max: 60, message: "DLC name is required." }]}
-            >
-              <AutoComplete
-                allowClear
-                options={dlcNames.map((n) => ({ value: n }))}
-                placeholder="Pick an existing DLC or type a new one"
-                filterOption={(input, option) => option.value.toLowerCase().includes(input.toLowerCase())}
-              />
-            </Form.Item>
-            <Form.Item
-              name="dlc_steam_url"
-              label={<Label>STEAM URL</Label>}
-              rules={[
-                {
-                  required: true,
-                  pattern: /^https:\/\/store\.steampowered\.com\/\S+$/,
-                  message: "Must start with https://store.steampowered.com/",
-                },
-              ]}
-            >
-              <Input allowClear placeholder="https://store.steampowered.com/app/…" />
-            </Form.Item>
-          </div>
-        )}
-
         <div className="border-t border-divider pt-3.5">
-          {isBattlePass ? (
-            <>
-              <Label>PRICE</Label>
-              <Note>Priced via Battle Pass</Note>
-            </>
-          ) : isDlc ? (
-            <>
-              <Label>PRICE</Label>
-              <Note>Priced via DLC</Note>
-            </>
-          ) : (
-            <Form.Item
-              name="price"
-              label={<Label>PRICE</Label>}
-              rules={[{ required: true, message: "Price is required." }]}
-            >
-              <InputNumber min={0.01} max={9999.99} step={0.01} precision={2} prefix="$" className="w-full!" />
-            </Form.Item>
-          )}
+          <Form.Item
+            name="price"
+            label={<Label>PRICE</Label>}
+            rules={[{ required: true, message: "Price is required." }]}
+          >
+            <InputNumber min={0.01} max={9999.99} step={0.01} precision={2} prefix="$" className="w-full!" />
+          </Form.Item>
         </div>
 
-        {item && !isBattlePass && !isDlc && (
+        {item && (
           <Link
             href={`/admin/stock?item=${item.id}`}
             className="flex items-center justify-between gap-3 px-3 py-2.5 mb-3.5 border border-hairline bg-input transition-colors duration-300 hover:border-gold"
