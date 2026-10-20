@@ -1,26 +1,143 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #0a0e12;
+  --foreground: #e8dcc8;
 }
 
 @theme inline {
+  --breakpoint-sm: 768px;
+  --breakpoint-md: 1024px;
+  --breakpoint-lg: 1280px;
+  --breakpoint-xl: 1920px;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-card: #0f131a;
+  --color-gold: #b8860b;
+  --color-gold-light: #e0a92a;
+  --color-hairline: #2d3543;
+  --color-line: #3d4556;
+  --color-muted: #6b7280;
+  --color-tan: #a89968;
+  --color-dim: #5b6470;
+  --color-success: #7fa86a;
+  --color-danger: #c41e3a;
+  --color-brass: #8b7355;
+  --color-hover: #171c26;
+  --color-divider: #1e2430;
+  --color-selected: #12171f;
+  --color-raised: #1a1f2e;
+  --color-input: #12161d;
+  --color-sunken: #0c1016;
+  --color-gold-dim: #6b5a22;
+  --color-danger-dim: #6d1622;
+  --font-sans: var(--font-newsreader);
+  --font-logo: var(--font-cinzel);
+  --text-shadow-ember:
+    0 0 6px rgba(224, 169, 42, 0.55), 0 0 18px rgba(196, 30, 58, 0.45),
+    0 2px 0 #000;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html,
+body {
+  margin: 0;
+}
+
+html {
+  background-color: #131922;
+  color-scheme: dark;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, rgba(30, 52, 84, 0.5), rgba(19, 25, 34, 0.55)),
+    url("/Site-background.webp") center top / cover no-repeat;
+  background-blend-mode: overlay, normal;
+  will-change: transform;
 }
 
 body {
-  background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-newsreader), serif;
+}
+
+*,
+*::before,
+*::after {
+  cursor:
+    url("/cursor-32.cur") 0 0,
+    auto !important;
+}
+
+@utility scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: --theme(--color-hairline) transparent;
+
+  &:hover {
+    scrollbar-color: --theme(--color-gold) transparent;
+  }
+
+  &::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: --theme(--color-hairline);
+  }
+  &:hover::-webkit-scrollbar-thumb {
+    background: --theme(--color-gold);
+  }
+}
+
+.ant-table-body {
+  @apply scrollbar-thin;
+}
+
+.ant-btn > span {
+  transform: translateY(0.14em);
+}
+
+.ant-carousel .slick-list,
+.ant-carousel .slick-track {
+  min-height: 316px !important;
+}
+
+@media (min-width: 768px) {
+  .ant-carousel .slick-list,
+  .ant-carousel .slick-track {
+    min-height: 380px !important;
+  }
+}
+
+@media (min-width: 1024px) {
+  .ant-carousel .slick-list,
+  .ant-carousel .slick-track {
+    min-height: 480px !important;
+  }
+}
+
+.ant-carousel .slick-dots li button {
+  background: #b8860b !important;
+  opacity: 0.75 !important;
+}
+
+.ant-carousel .slick-dots li:hover button {
+  opacity: 1 !important;
+}
+
+.ant-carousel .slick-dots li.slick-active button {
+  background: #2d3543 !important;
+  opacity: 1 !important;
+}
+
+.ant-carousel .slick-dots li.slick-active::after {
+  background: #e0a92a !important;
 }

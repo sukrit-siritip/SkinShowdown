@@ -1,0 +1,125 @@
+import Link from "next/link";
+import { createClient } from "@/lib/supabase/server";
+import HeroCarousel from "@/components/hero-carousel";
+import ItemCard from "@/components/item-card";
+import StatCard from "@/components/stat-card";
+import { RevealGroup, RevealItem } from "@/components/reveal";
+
+const NEW_ITEMS_LIMIT = 8;
+
+export default async function Home() {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  const [
+    { data: slides },
+    { count: catalogSize },
+    { data: newItems },
+    { data: cartRows },
+    { data: ownedRows },
+  ] = await Promise.all([
+    supabase
+      .from("events")
+      .select("id, title, tag, body, cta_label, cta_link, type, media_url")
+      .eq("active", true)
+      .order("sort_order", { ascending: true }),
+    supabase
+      .from("items")
+      .select("id", { count: "exact", head: true })
+      .eq("published", true),
+    supabase
+      .from("items")
+      .select("*, in_stock")
+      .eq("published", true)
+      .order("created_at", { ascending: false })
+      .order("id", { ascending: false })
+      .limit(NEW_ITEMS_LIMIT),
+    user
+      ? supabase.from("cart_items").select("item_id").eq("user_id", user.id)
+      : Promise.resolve({ data: [] }),
+    user
+      ? supabase
+          .from("order_items")
+          .select("item_id, orders!inner(user_id)")
+          .eq("orders.user_id", user.id)
+      : Promise.resolve({ data: [] }),
+  ]);
+
+  const cartItemIds = new Set((cartRows ?? []).map((row) => row.item_id));
+  const ownedItemIds = new Set((ownedRows ?? []).map((row) => row.item_id));
+
+  const activeEvent = slides?.[0];
+  const lastSync = new Date().toLocaleDateString("en-GB", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "2-digit",
+  });
+
+  return (
+    <>
+      <HeroCarousel slides={slides ?? []} />
+
+      <main className="flex-1 max-w-[1320px] mx-auto px-6 pt-11 pb-24 w-full">
+        <RevealGroup className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-14">
+          {activeEvent && (
+            <RevealItem>
+              <StatCard
+                label={`ACTIVE EVENT · ${activeEvent.title}`}
+                value={activeEvent.tag}
+                valueClassName="text-2xl text-danger"
+                description="live now"
+              />
+            </RevealItem>
+          )}
+          <RevealItem>
+            <StatCard
+              label="SKINS LIVE"
+              value={catalogSize ?? 0}
+              valueClassName="text-[32px] text-gold-light"
+              description="published in the store"
+            />
+          </RevealItem>
+          <RevealItem>
+            <StatCard
+              label="LAST SYNC"
+              value={lastSync}
+              description="data as of this date · prices in USD"
+            />
+          </RevealItem>
+        </RevealGroup>
+
+        <div className="flex items-baseline justify-between gap-4 flex-wrap mb-5">
+          <div>
+            <div className="text-[11px] tracking-[0.2em] text-tan mb-1.5">
+              JUST ADDED
+            </div>
+            <h2 className="font-bold text-3xl m-0">New Skins</h2>
+          </div>
+          <Link href="/items" className="text-xs text-gold!">
+            VIEW ALL {catalogSize ?? 0} →
+          </Link>
+        </div>
+
+        {newItems && newItems.length > 0 ? (
+          <RevealGroup className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 items-start">
+            {newItems.map((item) => (
+              <RevealItem key={item.id}>
+                <ItemCard
+                  item={item}
+                  inCart={cartItemIds.has(item.id)}
+                  owned={ownedItemIds.has(item.id)}
+                />
+              </RevealItem>
+            ))}
+          </RevealGroup>
+        ) : (
+          <div className="border border-hairline bg-card p-12 text-center text-muted">
+            No skins published yet — check back soon.
+          </div>
+        )}
+      </main>
+    </>
+  );
+}

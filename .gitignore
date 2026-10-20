@@ -43,4 +43,5 @@ next-env.d.ts
 # ai
 AGENTS.md
 CLAUDE.md
-PROJECT_CONTEXT.md
+PROJECT_SUMMARY.md
+design-reference/
