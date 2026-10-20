@@ -19,6 +19,26 @@ export default function Footer() {
         <div className="max-w-[560px] text-[11px] leading-[1.6] text-muted">
           FAN PROJECT · NOT AFFILIATED WITH THE GAME&apos;S PUBLISHER. CATALOGUE DATA AS OF{" "}
           {snapshotDate.toUpperCase()}.
+          <br />
+          Skin data &amp; images from the{" "}
+          <a
+            href="https://huntshowdown.wiki.gg/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-tan! hover:text-foreground!"
+          >
+            Hunt: Showdown 1896 Wiki
+          </a>
+          , licensed{" "}
+          <a
+            href="https://creativecommons.org/licenses/by-sa/4.0/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-tan! hover:text-foreground!"
+          >
+            CC BY-SA 4.0
+          </a>
+          .
         </div>
         <div className="flex gap-5 flex-wrap">
           {LEGAL_LINKS.map((link) => (
