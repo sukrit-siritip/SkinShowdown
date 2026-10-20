@@ -22,7 +22,7 @@ export default async function Home() {
   ] = await Promise.all([
     supabase
       .from("events")
-      .select("id, title, tag, body, cta_label, cta_link, type")
+      .select("id, title, tag, body, cta_label, cta_link, type, media_url")
       .eq("active", true)
       .order("sort_order", { ascending: true }),
     supabase
