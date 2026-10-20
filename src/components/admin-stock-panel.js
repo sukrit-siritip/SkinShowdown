@@ -12,7 +12,7 @@ function StatusBadge({ status }) {
   const sold = status === "sold";
   return (
     <span
-      className={`text-[10px] px-2 py-0.75 border inline-block justify-self-start ${
+      className={`text-[10px] px-2 py-0.75 border inline-flex items-center leading-none justify-self-start ${
         sold ? "border-hairline text-muted" : "border-line text-success"
       }`}
     >

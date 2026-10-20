@@ -114,7 +114,7 @@ export default async function AdminActivityPage({ searchParams }) {
                 </div>
                 <div>
                   <span
-                    className={`text-[9px] tracking-[0.1em] px-1.5 py-0.5 border ${
+                    className={`inline-flex items-center leading-none text-[9px] tracking-[0.1em] px-1.5 py-0.5 border ${
                       row.action === "insert"
                         ? "border-success text-success"
                         : row.action === "delete"
