@@ -32,12 +32,12 @@ export default function LegalContactPage() {
         <li>
           <span className="text-muted">LinkedIn </span>
           <a
-            href="https://linkedin.com/in/sukrit-siritip"
+            href="https://www.linkedin.com/in/sukrit-siritip-82b976324"
             target="_blank"
             rel="noopener noreferrer"
             className="text-gold! hover:text-foreground!"
           >
-            linkedin.com/in/sukrit-siritip
+            www.linkedin.com/in/sukrit-siritip-82b976324
           </a>
         </li>
         <li>
